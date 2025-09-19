@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+button {
+  border: none;
+}
+
 @font-face {
   font-family: 'ClashGrotesk';
   src: url('/fonts/ClashGrotesk-Extralight.woff2') format('woff2');
@@ -62,7 +66,4 @@
 
 body {
   font-family: 'ClashGrotesk', Arial, sans-serif;
-}
-.hero {
-  background-color: #f1ebf8;
 }
