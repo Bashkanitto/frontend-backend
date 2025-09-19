@@ -1,0 +1,130 @@
+.paddingGlobal {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+.banner {
+    display: flex;
+    min-height: 400px;
+    background-color: #FFE36E;
+    border-radius: 20px;
+    height: 100%;
+    width: 60%;
+}
+.bannerLeft{
+    display: flex;
+    margin: 2rem;
+    flex: 1;
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+    text-align: left;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.bannerRight {
+    position: relative;
+    overflow: hidden; /* чтобы картинка не вылазила при scale */
+    border-radius: 0 20px 20px 0;
+}
+
+.bannerRight img {
+    opacity: 0.8;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease, filter 0.3s ease, opacity 0.3s ease;
+    display: block;
+    border-radius: 0 20px 20px 0;
+}
+
+.bannerRight:hover img {
+    opacity: 0.85;
+    transform: scale(1.05);
+    filter: brightness(1.1);
+    cursor: pointer;
+}
+
+
+.whiteCircle{
+    background-color: white;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.whiteCircleSmall {
+  width: 32px;
+  height: 32px;
+}
+.whiteCircle img {
+    width: 50%;
+    height: 50%;
+    object-fit: contain;
+    display: block;
+}
+
+.bannerButton {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    border-radius: 25px;
+    background-color: black;
+    padding: 7px;
+    max-width: fit-content;
+    transition: all 0.3s ease;
+}
+.bannerButton:active {
+  transform: scale(0.95);
+}
+.bannerButton p {
+    color: white;
+    flex: unset;
+    margin: 0;
+    font-size: small;
+    margin-left: 20px;
+    margin-right: 15px;
+
+}
+.bannerButton:hover {
+    background-color: white;
+    transform: scale(0.9);
+}
+
+.bannerButton:hover p{
+    color: black;
+}
+.bannerButton:hover .whiteCircleSmall {
+    background: black;
+}
+.bannerButton:hover .whiteCircleSmall img {
+  filter: invert(1);
+}
+
+
+
+
+h1{
+    color: black;
+}
+p{
+    flex: 1;
+    color: black;
+}
+
+
+
+@media (max-width: 768px) {
+  .banner {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  .bannerRight {
+    margin-top: 1rem;
+    margin-bottom: 0;
+  }
+}
