@@ -2,8 +2,8 @@ import './App.css';
 import Footer from './components/Footer/Footer';
 import Banner from './components/Banner/Banner';
 import Header from './components/Header/Header';
+import About from './components/About/About';
 
-// App.tsx
 function App() {
   return (
     <>
@@ -15,6 +15,7 @@ function App() {
         leftIcon="/images/gamepad.svg"
         rightImage="/images/minecraft.png"
       />
+      <About />
       <Footer />
     </>
   );
