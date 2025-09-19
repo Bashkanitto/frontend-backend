@@ -1,13 +1,13 @@
 import './App.css';
 import Footer from './components/Footer/Footer';
 import Banner from './components/Banner/Banner';
-import Header from './components/Header/Header';
 import About from './components/About/About';
+import Hero from './components/Hero/Hero';
 
 function App() {
   return (
     <>
-      <Header />
+      <Hero />
       <Banner
         title="typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         subtitle="bbb"

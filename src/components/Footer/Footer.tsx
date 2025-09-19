@@ -1,7 +1,7 @@
 import React from 'react';
 import { Facebook, Linkedin, Twitter, Instagram } from 'lucide-react';
-import { color } from 'framer-motion';
 import styles from './Footer.module.css';
+import './Footer.css';
 
 const Footer: React.FC = () => {
   return (
