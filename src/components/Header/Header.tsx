@@ -12,30 +12,29 @@ const Header: React.FC = () => {
         <nav>
           <ul>
             <li>
-              <a href="#" className={styles.navLink}>
-                Pricing
+              <a href="/home" className={styles.navLink}>
+                Home
               </a>
             </li>
             <li>
-              <a href="#" className={styles.navLink}>
-                Features
+              <a href="/about" className={styles.navLink}>
+                About
               </a>
             </li>
             <li>
-              <a href="#" className={styles.navLink}>
-                Blogs
-              </a>
-            </li>
-            <li>
-              <a href="#" className={styles.navLink}>
-                Blog Post
+              <a href="/contact" className={styles.navLink}>
+                Contact
               </a>
             </li>
           </ul>
         </nav>
         <div className={styles.headerButtons}>
-          <a href="#">Sign up</a>
-          <a href="#">Get started</a>
+          <a href="#" style={{ background: 'white', color: 'black' }}>
+            Sign up
+          </a>
+          <a href="#" style={{ background: 'black', color: 'white' }}>
+            Get started
+          </a>
         </div>
       </div>
     </header>
