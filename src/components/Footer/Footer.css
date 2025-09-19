@@ -68,7 +68,7 @@
   flex: 1;
   height: 3.25rem;
   max-width: 21.5rem;
-  padding: .875rem 1.5rem;
+  padding: 0.875rem 1.5rem;
   background-color: #fff3;
   color: #ffffff;
   border: none;
@@ -93,7 +93,7 @@
 
 .get-started-btn {
   height: 3.25rem;
-  padding: .875rem 1.5rem;
+  padding: 0.875rem 1.5rem;
   background-color: #ffffff;
   color: #111;
   font-weight: 600;
