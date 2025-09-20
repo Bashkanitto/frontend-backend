@@ -17,6 +17,7 @@ import {
 import styles from './About.module.css';
 import FadeInWrapper from '../../utils/FadeInWrapper';
 import Footer from '../Footer/Footer';
+import Header from '../Header/Header';
 
 const About: React.FC = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -96,6 +97,7 @@ const About: React.FC = () => {
 
   return (
     <>
+      <Header />
       <section className={styles.about}>
         <div className={styles.aboutContainer}>
           <div className={styles.aboutMainContent}>

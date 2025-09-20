@@ -1,7 +1,6 @@
 import React from 'react';
 import Hero from './Hero/Hero';
 import Banner from './Banner/Banner';
-import About from './About/About';
 import FadeInWrapper from '../utils/FadeInWrapper';
 import Footer from './Footer/Footer';
 import Features from './Features/Features';
@@ -20,7 +19,6 @@ const Layout = () => {
         />
         <Features />
       </FadeInWrapper>
-      <About />
       <FadeInWrapper>
         <Footer />
       </FadeInWrapper>

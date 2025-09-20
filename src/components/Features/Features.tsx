@@ -20,6 +20,12 @@ const Features = () => {
         <div className="card">
           <img style={{ height: '400px' }} src="/images/feature1.avif" alt="feature card" />
         </div>
+        <div className="card">
+          <img style={{ height: '400px' }} src="/images/feature1.avif" alt="feature card" />
+        </div>
+        <div className="card">
+          <img style={{ height: '400px' }} src="/images/feature1.avif" alt="feature card" />
+        </div>
       </div>
     </div>
   );
