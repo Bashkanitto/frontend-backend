@@ -109,9 +109,9 @@ const About: React.FC = () => {
             </FadeInWrapper>
 
             <FadeInWrapper time={0.7}>
-              <h1 className={styles.aboutHeading}>
+              <h2 className={styles.aboutHeading}>
                 Empowering Teams, One Task at a Time, Every Day
-              </h1>
+              </h2>
             </FadeInWrapper>
 
             <FadeInWrapper time={0.9}>

@@ -25,6 +25,14 @@
   grid-template-columns: 2fr 2fr 2fr;
 }
 
+@media (max-width: 640px) {
+  .features .grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
 .grid div {
   border: 10px solid white;
   border-radius: 15px;

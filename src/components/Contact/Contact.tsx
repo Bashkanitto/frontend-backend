@@ -12,10 +12,10 @@ function Contact() {
           <img src={medal} alt="" className={styles.medalImg} />
           <p>#1 Product of the Day</p>
         </div>
-        <h1 className={styles.maxHeading}>
+        <h2 className={styles.maxHeading}>
           Get in touch, let us know
           <br /> how we can help
-        </h1>
+        </h2>
         <div className={styles.contactUs}>
           <div className={styles.formRow}>
             <form className={styles.formWrapper}>
