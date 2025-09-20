@@ -2,28 +2,29 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 50px;
   margin-top: 50px;
+  margin-bottom: 50px;
 }
 .banner {
   display: flex;
   min-height: 400px;
   background-color: #ffe36e;
   border-radius: 20px;
-  height: 100%;
   width: 50rem;
+  height: 80%;
 }
 .bannerLeft {
   display: flex;
   margin: 2rem;
-  flex: 1;
   margin-top: 4rem;
+  flex: 1;
   margin-bottom: 4rem;
   text-align: left;
   flex-direction: column;
   justify-content: space-between;
 }
 .bannerRight {
+  flex: 1;
   position: relative;
   overflow: hidden; /* чтобы картинка не вылазила при scale */
   border-radius: 0 20px 20px 0;
@@ -102,6 +103,16 @@
 }
 .bannerButton:hover .whiteCircleSmall img {
   filter: invert(1);
+}
+
+h2 {
+  color: black;
+  font-size: 42px;
+  font-weight: 600;
+}
+p {
+  flex: 1;
+  color: black;
 }
 
 @media (max-width: 768px) {

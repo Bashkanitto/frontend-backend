@@ -1,14 +1,13 @@
-import arrow from '../../../public/images/arrow-right.svg'
-import styles from './Banner.module.css'
+import arrow from '../../../public/images/arrow-right.svg';
+import styles from './Banner.module.css';
 
 type BannerProps = {
-  title: string
-  subtitle: string
-  buttonText: string
-  leftIcon?: string
-  rightImage?: string
-}
-
+  title: string;
+  subtitle?: string;
+  buttonText: string;
+  leftIcon?: string;
+  rightImage?: string;
+};
 
 function Banner({ title, subtitle, buttonText, leftIcon, rightImage }: BannerProps) {
   return (
@@ -20,8 +19,7 @@ function Banner({ title, subtitle, buttonText, leftIcon, rightImage }: BannerPro
               <img src={leftIcon} alt="icon" />
             </div>
           )}
-          <h1>{title}</h1>
-          <p>{subtitle}</p>
+          <h2>{title}</h2>
           <button className={styles.bannerButton}>
             <p className={styles.bannerButtonText}>{buttonText}</p>
             <div className={`${styles.whiteCircle} ${styles.whiteCircleSmall}`}>
@@ -35,7 +33,7 @@ function Banner({ title, subtitle, buttonText, leftIcon, rightImage }: BannerPro
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Banner
+export default Banner;

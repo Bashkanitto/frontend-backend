@@ -1,5 +1,5 @@
 .about {
-  background: linear-gradient(180deg, #f3e8ff 0%, #e9d5ff 100%);
+  background: #f0f0f0;
   color: #111;
   width: 100%;
   min-height: 100vh;
@@ -257,8 +257,8 @@
   min-width: 80px;
   margin-left: -120px;
   background-color: #fff;
-    padding: 4px 8px;
-    border-radius: 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
 }
 
 .timelineYear {
@@ -324,12 +324,12 @@
   .timeline {
     padding-left: 32px;
   }
-  
+
   .timelineDate {
     margin-left: -100px;
     min-width: 60px;
   }
-  
+
   .timelineIcon {
     left: -27px;
     width: 36px;
