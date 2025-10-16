@@ -6,10 +6,10 @@ export default function FadeInWrapper({
   time,
 }: {
   children: React.ReactNode;
-  time: number;
+  time?: number;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true }); // trigger only once
+  const isInView = useInView(ref, { once: true });
 
   return (
     <m.div

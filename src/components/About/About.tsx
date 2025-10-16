@@ -20,7 +20,7 @@ import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 
 const About: React.FC = () => {
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [visibleTimeline, setVisibleTimeline] = useState<number[]>([]);
   const timelineRef = useRef<HTMLDivElement>(null);
 
@@ -103,7 +103,6 @@ const About: React.FC = () => {
           <div className={styles.aboutMainContent}>
             <FadeInWrapper time={0.5}>
               <div className={styles.aboutBadge}>
-                <span className={styles.badgeIcon}>🏠</span>
                 <span className={styles.badgeText}>About Us</span>
               </div>
             </FadeInWrapper>

@@ -76,6 +76,7 @@
   border-radius: 6.5rem;
   outline: none;
   transition: all 0.3s ease;
+  font-weight: 400;
 }
 
 @media (min-width: 640px) {
@@ -98,16 +99,21 @@
   background-color: #ffffff;
   color: #111;
   font-weight: 600;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 6.5rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
   white-space: nowrap;
+  
+  transition: all 0.3s ease;
 }
 
 .getStartedBtn:hover {
-  background-color: #f3f4f6;
+  background-color: #111;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  transform: scale(0.95);
 }
+
 
 .footerContent {
   display: grid;
