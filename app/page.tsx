@@ -1,58 +1,42 @@
-import Image from "next/image";
+'use client';
+
+import Sidebar from '@/app/components/Sidebar';
+import Header from '@/app/components/Header';
+import Loader from './components/Loader';
+import Modal from './components/Modal';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    // Очистка таймера при размонтировании
+    return () => clearTimeout(timer);
+  }, []);
+
+  // ✅ Если идёт загрузка — показываем лоадер
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader />
+      </div>
+    );
+  }
+
+  // ✅ Когда загрузка закончилась — показываем основное содержимое
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark"
-          src="/youtube_logo.png"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            Это изменил Алишер
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            А это изменил Мурагер.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://www.youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark"
-              src="/youtube_logo.png"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            YouTube
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://github.com/Bashkanitto/frontend-backend"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark"
-              src="/github_logo.png"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            GitHub
-          </a>
-        </div>
-      </main>
+    <div className="flex w-full h-screen">
+      <Sidebar />
+
+      <div className="flex-1 flex flex-col background">
+        <Header />
+        <main className="p-4 mx-7 rounded-xl bg-[var(--background)] h-[50%]">
+          {/* Контент */}
+        </main>
+      </div>
+
+      <Modal />
     </div>
   );
 }
