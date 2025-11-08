@@ -47,12 +47,12 @@ export default function Sidebar() {
                 : '/void_logo.svg'
             }
             alt="logo"
-            className={styles.logo}
+            className={`${styles.logo} ml-2`}
             style={{
-              width: '40px',
-              height: '40px',
-              minWidth: '40px',
-              minHeight: '40px',
+              width: '25px',
+              height: '25px',
+              minWidth: '25px',
+              minHeight: '25px',
             }}
           />
         </div>
@@ -82,7 +82,6 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className={styles.divider}></div>
 
       <div className={styles.nav}>
         {navItems.map((item) => {

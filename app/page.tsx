@@ -4,6 +4,7 @@ import Sidebar from '@/app/components/Sidebar';
 import Header from '@/app/components/Header';
 import Loader from './components/Loader';
 import Modal from './components/Modal';
+import { WalletCard } from './components/WalletCard';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
@@ -32,7 +33,9 @@ export default function Home() {
       <div className="flex-1 flex flex-col background">
         <Header />
         <main className="p-4 mx-7 rounded-xl bg-[var(--background)] h-[50%]">
-          {/* Контент */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      </div>
         </main>
       </div>
 
