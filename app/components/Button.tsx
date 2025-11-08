@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { usePageStore } from "@/store/usePageStore";
+import { usePageStore } from '@/store/usePageStore';
 
 export default function Button() {
   const { currentPage } = usePageStore();
 
   const buttonTitles = {
-    home: "Add transaction",
-    settings: "Log out",
-    statistic: "Add transaction",
-    wallet: "Add wallet",
-    add: "",
+    home: 'Add transaction',
+    settings: 'Log out',
+    statistic: 'Add transaction',
+    wallet: 'Add wallet',
+    add: '',
   };
 
   // Условия для разных страниц
-  const isSettings = currentPage === "settings";
-  const bgColor = isSettings ? "bg-red-500" : "bg-[var(--foreground)]";
-  const iconSrc = isSettings ? "/logout.svg" : "/plus_icon.svg";
+  const isSettings = currentPage === 'settings';
+  const bgColor = isSettings ? 'bg-red-500' : 'bg-[var(--foreground)]';
+  const iconSrc = isSettings ? '/logout_icon.svg' : '/plus_icon.svg';
   const iconFilter = isSettings
-    ? "[filter:var(--icon-filter)]"
-    : "[filter:var(--icon-filter-back)]";
+    ? '[filter:var(--icon-filter)]'
+    : '[filter:var(--icon-filter-back)]';
 
   return (
     <button
@@ -33,8 +33,8 @@ export default function Button() {
       <p
         className={`mr-4 font-semibold ${
           isSettings
-            ? "text-[var(--foreground)]" // ← текст чёрный на светлой, белый на тёмной
-            : "text-[var(--background)]"
+            ? 'text-[var(--foreground)]' // ← текст чёрный на светлой, белый на тёмной
+            : 'text-[var(--background)]'
         }`}
       >
         {buttonTitles[currentPage]}

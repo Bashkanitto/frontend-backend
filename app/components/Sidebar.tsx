@@ -44,7 +44,7 @@ export default function Sidebar() {
             src={
               !isOpen && isLogoHovered
                 ? '/sidebarOpen_icon.svg'
-                : '/void_logo.svg'
+                : '/logo_icon.svg'
             }
             alt="logo"
             className={`${styles.logo} ml-2`}
@@ -81,7 +81,6 @@ export default function Sidebar() {
           <span className={styles.profileCard}>Visa Debit *1000</span>
         </div>
       </div>
-
 
       <div className={styles.nav}>
         {navItems.map((item) => {

@@ -32,11 +32,7 @@ export default function Home() {
 
       <div className="flex-1 flex flex-col background">
         <Header />
-        <main className="p-4 mx-7 rounded-xl bg-[var(--background)] h-[50%]">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-      </div>
-        </main>
+        <main></main>
       </div>
 
       <Modal />
