@@ -35,12 +35,6 @@ export default function Sidebar() {
       icon: 'icons/wallet_icon.svg',
       link: '/wallet',
     },
-    {
-      id: 'settings',
-      label: 'Settings',
-      icon: 'icons/settings_icon.svg',
-      link: '/settings',
-    },
   ];
 
   return (
@@ -111,6 +105,20 @@ export default function Sidebar() {
             );
           })}
         </div>
+
+        <Link
+          href="/settings"
+          className={`${styles.navItem} ${pathname === 'settings' ? styles.active : ''}`}
+        >
+          <Image
+            width={24}
+            height={24}
+            src="icons/settings_icon.svg"
+            alt="settings"
+            className={styles.navIcon}
+          />
+          <span>Settings</span>
+        </Link>
       </div>
     </div>
   );
