@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Home, ShoppingBasket, Laptop, Gamepad, Plus } from 'lucide-react';
+import { Card } from '@/components/Card';
 
 export default function StatisticsPage() {
   const [currency] = useState('EUR');
@@ -73,7 +74,7 @@ export default function StatisticsPage() {
     <div className="max-w-7xl mx-auto">
       <div className="grid grid-cols-2 gap-6">
         {/* Balance Chart */}
-        <div className="bg-white rounded-3xl p-8 shadow-sm">
+        <Card className="bg-white rounded-3xl p-8 shadow-sm">
           <h2 className="text-xl font-bold mb-2">Monthly Balance</h2>
           <div className="text-4xl font-bold mb-1">
             {currencySymbols[currency as 'EUR' | 'KZT' | 'USD']}3,000
@@ -110,10 +111,10 @@ export default function StatisticsPage() {
               <span>12-30</span>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Income by Category */}
-        <div className="bg-white rounded-3xl p-8 shadow-sm">
+        <Card className="bg-white rounded-3xl p-8 shadow-sm">
           <h2 className="text-xl font-bold mb-8">Income by Category</h2>
 
           <div className="flex items-center justify-center mb-8">
@@ -181,11 +182,11 @@ export default function StatisticsPage() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Top Transactions */}
-      <div className="bg-white rounded-3xl p-8 shadow-sm mt-6">
+      <Card className="bg-white rounded-3xl p-8 shadow-sm mt-6">
         <h2 className="text-xl font-bold mb-6">Top Transactions This Month</h2>
 
         <div className="grid grid-cols-2 gap-4">
@@ -216,7 +217,7 @@ export default function StatisticsPage() {
             </div>
           ))}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

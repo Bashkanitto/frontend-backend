@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ArrowUp, ArrowDown, Landmark, ShoppingBasket } from 'lucide-react';
+import { Card } from '@/components/Card';
 
 export default function MainWalletPage() {
   const [balance] = useState(2500);
@@ -10,7 +11,7 @@ export default function MainWalletPage() {
   const [expenses] = useState(1500);
   const [savings] = useState(1000);
 
-  const [currency] = useState<'EUR' | 'KZT' | 'USD'>('EUR');
+  const [currency, setCurrency] = useState<'EUR' | 'KZT' | 'USD'>('EUR');
 
   const currencySymbols = {
     EUR: '€',
@@ -32,9 +33,9 @@ export default function MainWalletPage() {
   const balancePercentage = (balance / totalBalance) * 100;
 
   return (
-    <div className="w-full">
+    <div className="max-w-7xl mx-auto">
       {/* Main Balance Card */}
-      <div className="bg-white rounded-3xl p-8 mb-6 shadow-sm">
+      <Card className="p-8 mb-6">
         <h1 className="text-2xl font-bold mb-2">Main Wallet</h1>
 
         <div className="mt-6">
@@ -46,7 +47,12 @@ export default function MainWalletPage() {
 
           {/* Progress Bar */}
           <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div
+            <input
+              type="range"
+              onChange={() => {}}
+              min={0}
+              max={100}
+              value={balancePercentage}
               className="absolute top-0 left-0 h-full bg-black rounded-full transition-all duration-300"
               style={{ width: `${balancePercentage}%` }}
             />
@@ -56,12 +62,12 @@ export default function MainWalletPage() {
             {totalBalance.toLocaleString()} Total Balance
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {/* Incomes */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <Card className="bg-white rounded-2xl p-6 shadow-sm">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
               <ArrowUp className="w-6 h-6" />
@@ -74,10 +80,10 @@ export default function MainWalletPage() {
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Expenses */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <Card className="bg-white rounded-2xl p-6 shadow-sm">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
               <ArrowDown className="w-6 h-6" />
@@ -90,10 +96,10 @@ export default function MainWalletPage() {
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Savings */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <Card className="bg-white rounded-2xl p-6 shadow-sm">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
               <Landmark className="w-6 h-6" />
@@ -106,16 +112,16 @@ export default function MainWalletPage() {
               </div>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Recent Transactions */}
-      <div className="bg-white rounded-3xl p-8 shadow-sm">
+      <div className="bg-white rounded-3xl">
         <h2 className="text-2xl font-bold mb-6">Recent Transaction</h2>
 
         <div className="space-y-3">
           {recentTransactions.map((transaction) => (
-            <div
+            <Card
               key={transaction.id}
               className="bg-gray-50 rounded-2xl p-5 flex items-center justify-between hover:bg-gray-100 transition-colors"
             >
@@ -140,7 +146,7 @@ export default function MainWalletPage() {
                 </div>
                 <div className="text-gray-400 text-sm">{transaction.date}</div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

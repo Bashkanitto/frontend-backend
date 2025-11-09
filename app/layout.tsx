@@ -1,5 +1,7 @@
 import localFont from 'next/font/local';
 import './globals.css';
+import Sidebar from '@/components/Sidebar';
+import Header from '@/components/Header';
 
 const inter = localFont({
   src: [
@@ -34,7 +36,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body
+        className={`${inter.className} flex w-full h-screen bg-[var(--background)] text-[var(--foreground)]`}
+      >
+        <Sidebar />
+        <div className="w-full">
+          <Header />
+          <main className="p-6 overflow-y-auto">{children}</main>
+        </div>
+      </body>
     </html>
   );
 }

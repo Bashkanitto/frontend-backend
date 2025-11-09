@@ -31,7 +31,7 @@ export default function MainWalletPage() {
   const balancePercentage = (balance / totalBalance) * 100;
 
   return (
-    <div className="bg-gray-50 w-full min-h-screen p-6">
+    <div className=" w-full min-h-screen p-6">
       <div className="max-w-4xl mx-auto">
         {/* Main Balance Card */}
         <div className="bg-white rounded-3xl p-8 mb-6 shadow-sm">

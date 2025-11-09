@@ -1,4 +1,5 @@
 'use client';
+import { Card } from '@/components/Card';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
@@ -30,9 +31,9 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="bg-[var(--background-darker)] w-full h-full p-8">
+    <div className="w-full h-full">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-[var(--background)] rounded-2xl p-6">
+        <Card>
           <h2 className="text-xl font-semibold mb-6 text-[var(--foreground)]">
             General
           </h2>
@@ -93,9 +94,9 @@ export default function SettingsPage() {
               </select>
             </div>
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-[var(--background)] rounded-2xl p-6">
+        <Card>
           <h2 className="text-xl font-semibold mb-6 text-[var(--foreground)]">
             Security
           </h2>
@@ -137,9 +138,9 @@ export default function SettingsPage() {
               </button>
             </div>
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-[var(--background)] rounded-2xl p-6">
+        <Card>
           <h2 className="text-xl font-semibold mb-6 text-[var(--foreground)]">
             Help & Support
           </h2>
@@ -182,7 +183,7 @@ export default function SettingsPage() {
               />
             </button>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

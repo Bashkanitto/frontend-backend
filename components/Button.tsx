@@ -1,21 +1,10 @@
 'use client';
 
-import { usePageStore } from '@/store/usePageStore';
 import Image from 'next/image';
 
-export default function Button() {
-  const { currentPage } = usePageStore();
-
-  const buttonTitles = {
-    home: 'Add transaction',
-    settings: 'Log out',
-    statistic: 'Add transaction',
-    wallet: 'Add wallet',
-    add: '',
-  };
-
+export default function Button({ children }: { children?: React.ReactNode }) {
   // Условия для разных страниц
-  const isSettings = currentPage === 'settings';
+  const isSettings = 'settings';
   const bgColor = isSettings ? 'bg-red-500' : 'bg-[var(--foreground)]';
   const iconSrc = isSettings ? 'icons/logout_icon.svg' : 'icons/plus_icon.svg';
   const iconFilter = isSettings
@@ -40,7 +29,7 @@ export default function Button() {
             : 'text-[var(--background)]'
         }`}
       >
-        {buttonTitles[currentPage]}
+        {children}
       </p>
     </button>
   );
