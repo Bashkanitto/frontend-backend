@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { ArrowUp, ArrowDown, Landmark, ShoppingBasket } from 'lucide-react';
+import { Card } from '@/components/Card';
 
 export default function MainWalletPage() {
   const [balance] = useState(2500);
@@ -31,10 +32,10 @@ export default function MainWalletPage() {
   const balancePercentage = (balance / totalBalance) * 100;
 
   return (
-    <div className=" w-full min-h-screen p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className=" w-full min-h-screen">
+      <div className="mx-auto">
         {/* Main Balance Card */}
-        <div className="bg-white rounded-3xl p-8 mb-6 shadow-sm">
+        <Card className="bg-white rounded-3xl p-8 mb-6 shadow-sm">
           <h1 className="text-2xl font-bold mb-2">Main Wallet</h1>
 
           <div className="mt-6">
@@ -58,12 +59,12 @@ export default function MainWalletPage() {
               {totalBalance.toLocaleString()} Total Balance
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           {/* Incomes */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <Card className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
                 <ArrowUp className="w-6 h-6" />
@@ -76,10 +77,10 @@ export default function MainWalletPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Expenses */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <Card className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
                 <ArrowDown className="w-6 h-6" />
@@ -92,10 +93,10 @@ export default function MainWalletPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Savings */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <Card className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
                 <Landmark className="w-6 h-6" />
@@ -108,11 +109,11 @@ export default function MainWalletPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Recent Transactions */}
-        <div className="bg-white rounded-3xl p-8 shadow-sm">
+        <Card className="bg-white rounded-3xl pt-8 ">
           <h2 className="text-2xl font-bold mb-6">Recent Transaction</h2>
 
           <div className="space-y-3">
@@ -147,7 +148,7 @@ export default function MainWalletPage() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );
