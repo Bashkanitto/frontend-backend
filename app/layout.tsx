@@ -4,22 +4,22 @@ import './globals.css';
 const inter = localFont({
   src: [
     {
-      path: './fonts/Inter/Inter-Regular.otf',
+      path: '../public/fonts/Inter-Regular.otf',
       weight: '400',
       style: 'normal',
     },
     {
-      path: './fonts/Inter/Inter-Medium.otf',
+      path: '../public/fonts/Inter-Medium.otf',
       weight: '500',
       style: 'normal',
     },
     {
-      path: './fonts/Inter/Inter-SemiBold.otf',
+      path: '../public/fonts/Inter-SemiBold.otf',
       weight: '600',
       style: 'normal',
     },
     {
-      path: '/fonts/Inter/Inter-Bold.otf',
+      path: '../public/fonts/Inter-Bold.otf',
       weight: '700',
       style: 'normal',
     },

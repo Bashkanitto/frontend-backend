@@ -17,7 +17,7 @@ export default function Button() {
   // Условия для разных страниц
   const isSettings = currentPage === 'settings';
   const bgColor = isSettings ? 'bg-red-500' : 'bg-[var(--foreground)]';
-  const iconSrc = isSettings ? '/logout_icon.svg' : '/plus_icon.svg';
+  const iconSrc = isSettings ? 'icons/logout_icon.svg' : 'icons/plus_icon.svg';
   const iconFilter = isSettings
     ? '[filter:var(--icon-filter)]'
     : '[filter:var(--icon-filter-back)]';
@@ -27,6 +27,8 @@ export default function Button() {
       className={`h-10 ${bgColor} rounded-xl flex items-center transition-all duration-200`}
     >
       <Image
+        width={28}
+        height={28}
         src={iconSrc}
         className={`${iconFilter} w-7 ml-4 mr-2`}
         alt="button icon"

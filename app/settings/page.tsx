@@ -150,7 +150,9 @@ export default function SettingsPage() {
                 Contact Us
               </span>
               <Image
-                src="/contactUs_icon.svg"
+                width={24}
+                height={24}
+                src="icons/contactUs_icon.svg"
                 alt="Contact Us"
                 className="w-6 h-6 [filter:var(--icon-filter)]"
               />
@@ -159,7 +161,9 @@ export default function SettingsPage() {
             <button className="w-full bg-[var(--background2)] rounded-xl p-4 flex items-center justify-between hover:bg-[var(--sidebar-hover)] transition-colors">
               <span className="text-[var(--foreground)] font-medium">FAQ</span>
               <Image
-                src="/faq_icon.svg"
+                width={24}
+                height={24}
+                src="icons/faq_icon.svg"
                 alt="FAQ"
                 className="w-6 h-6 [filter:var(--icon-filter)]"
               />
@@ -170,7 +174,9 @@ export default function SettingsPage() {
                 Privacy Policy
               </span>
               <Image
-                src="/shield_icon.svg"
+                width={24}
+                height={24}
+                src="icons/shield_icon.svg"
                 alt="Privacy Policy"
                 className="w-6 h-6 [filter:var(--icon-filter)]"
               />
