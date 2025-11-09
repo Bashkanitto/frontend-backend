@@ -1,3 +1,5 @@
+'use client';
+import Image from 'next/image';
 import React, { useState } from 'react';
 
 export default function SettingsPage() {
@@ -147,7 +149,7 @@ export default function SettingsPage() {
               <span className="text-[var(--foreground)] font-medium">
                 Contact Us
               </span>
-              <img
+              <Image
                 src="/contactUs_icon.svg"
                 alt="Contact Us"
                 className="w-6 h-6 [filter:var(--icon-filter)]"
@@ -156,7 +158,7 @@ export default function SettingsPage() {
 
             <button className="w-full bg-[var(--background2)] rounded-xl p-4 flex items-center justify-between hover:bg-[var(--sidebar-hover)] transition-colors">
               <span className="text-[var(--foreground)] font-medium">FAQ</span>
-              <img
+              <Image
                 src="/faq_icon.svg"
                 alt="FAQ"
                 className="w-6 h-6 [filter:var(--icon-filter)]"
@@ -167,7 +169,7 @@ export default function SettingsPage() {
               <span className="text-[var(--foreground)] font-medium">
                 Privacy Policy
               </span>
-              <img
+              <Image
                 src="/shield_icon.svg"
                 alt="Privacy Policy"
                 className="w-6 h-6 [filter:var(--icon-filter)]"

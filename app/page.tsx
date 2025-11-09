@@ -1,17 +1,24 @@
 'use client';
 
-import Sidebar from '@/app/components/Sidebar';
-import Header from '@/app/components/Header';
-import Loader from './components/Loader';
-import Modal from './components/Modal';
-import { WalletCard } from './components/WalletCard';
+import Sidebar from '@/components/Sidebar';
+import Header from '@/components/Header';
+import Loader from '../components/Loader';
+import Modal from '../components/Modal';
+import { WalletCard } from '../components/WalletCard';
 import { useState, useEffect } from 'react';
 import { usePageStore } from '@/store/usePageStore';
-import SettingsPage from './(pages)/settings/page';
-import { TransactionItem } from './components/TransactionItem';
-import { ShoppingCart, Gamepad2, Cross, Wallet, DollarSign, Building2 } from 'lucide-react';
-import MainWalletPage from './(pages)/home/page';
-import StatisticsPage from './(pages)/statistic/page';
+import SettingsPage from './settings/page';
+import { TransactionItem } from '../components/TransactionItem';
+import {
+  ShoppingCart,
+  Gamepad2,
+  Cross,
+  Wallet,
+  DollarSign,
+  Building2,
+} from 'lucide-react';
+import MainWalletPage from './home/page';
+import StatisticsPage from './statistic/page';
 
 export default function Home() {
   const { currentPage } = usePageStore();
@@ -49,7 +56,9 @@ export default function Home() {
 
               {/* Transactions */}
               <section className="bg-white rounded-2xl p-4 shadow-sm">
-                <h3 className="text-sm font-semibold text-gray-800 mb-3">Recent Transaction</h3>
+                <h3 className="text-sm font-semibold text-gray-800 mb-3">
+                  Recent Transaction
+                </h3>
                 <div className="flex flex-col gap-2">
                   <TransactionItem
                     icon={ShoppingCart}
@@ -80,8 +89,8 @@ export default function Home() {
           {/* Страница Settings */}
           {currentPage === 'settings' && <SettingsPage />}
 
-          {currentPage === 'home' && <MainWalletPage/>}
-          {currentPage === 'statistic' && <StatisticsPage/>}
+          {currentPage === 'home' && <MainWalletPage />}
+          {currentPage === 'statistic' && <StatisticsPage />}
         </main>
       </div>
 

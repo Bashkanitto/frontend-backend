@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+'use client';
+import { useState } from 'react';
 import { ArrowUp, ArrowDown, Landmark, ShoppingBasket } from 'lucide-react';
 
 export default function MainWalletPage() {
@@ -7,13 +8,13 @@ export default function MainWalletPage() {
   const [incomes] = useState(3000);
   const [expenses] = useState(1500);
   const [savings] = useState(1000);
-  
+
   const [currency] = useState<'EUR' | 'KZT' | 'USD'>('EUR');
-  
+
   const currencySymbols = {
     EUR: '€',
     KZT: '₸',
-    USD: '$'
+    USD: '$',
   };
 
   const recentTransactions = [
@@ -23,8 +24,8 @@ export default function MainWalletPage() {
       category: 'Supermarket',
       amount: -45.3,
       date: 'Nov 13, 16:55',
-      icon: ShoppingBasket
-    }
+      icon: ShoppingBasket,
+    },
   ];
 
   const balancePercentage = (balance / totalBalance) * 100;
@@ -35,22 +36,26 @@ export default function MainWalletPage() {
         {/* Main Balance Card */}
         <div className="bg-white rounded-3xl p-8 mb-6 shadow-sm">
           <h1 className="text-2xl font-bold mb-2">Main Wallet</h1>
-          
+
           <div className="mt-6">
             <div className="text-5xl font-bold mb-2">
-              {currencySymbols[currency]}{balance.toLocaleString()}
+              {currencySymbols[currency]}
+              {balance.toLocaleString()}
             </div>
-            <div className="text-gray-400 text-sm mb-4">Remaining this month</div>
-            
+            <div className="text-gray-400 text-sm mb-4">
+              Remaining this month
+            </div>
+
             {/* Progress Bar */}
             <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="absolute top-0 left-0 h-full bg-black rounded-full transition-all duration-300"
                 style={{ width: `${balancePercentage}%` }}
               />
             </div>
             <div className="text-gray-400 text-sm mt-2">
-              {currencySymbols[currency]}{totalBalance.toLocaleString()} Total Balance
+              {currencySymbols[currency]}
+              {totalBalance.toLocaleString()} Total Balance
             </div>
           </div>
         </div>
@@ -66,7 +71,8 @@ export default function MainWalletPage() {
               <div>
                 <div className="text-gray-400 text-sm">Incomes</div>
                 <div className="text-3xl font-bold">
-                  {currencySymbols[currency]}{incomes.toLocaleString()}
+                  {currencySymbols[currency]}
+                  {incomes.toLocaleString()}
                 </div>
               </div>
             </div>
@@ -81,7 +87,8 @@ export default function MainWalletPage() {
               <div>
                 <div className="text-gray-400 text-sm">Expenses</div>
                 <div className="text-3xl font-bold">
-                  {currencySymbols[currency]}{expenses.toLocaleString()}
+                  {currencySymbols[currency]}
+                  {expenses.toLocaleString()}
                 </div>
               </div>
             </div>
@@ -96,7 +103,8 @@ export default function MainWalletPage() {
               <div>
                 <div className="text-gray-400 text-sm">Savings</div>
                 <div className="text-3xl font-bold">
-                  {currencySymbols[currency]}{savings.toLocaleString()}
+                  {currencySymbols[currency]}
+                  {savings.toLocaleString()}
                 </div>
               </div>
             </div>
@@ -106,10 +114,10 @@ export default function MainWalletPage() {
         {/* Recent Transactions */}
         <div className="bg-white rounded-3xl p-8 shadow-sm">
           <h2 className="text-2xl font-bold mb-6">Recent Transaction</h2>
-          
+
           <div className="space-y-3">
             {recentTransactions.map((transaction) => (
-              <div 
+              <div
                 key={transaction.id}
                 className="bg-gray-50 rounded-2xl p-5 flex items-center justify-between hover:bg-gray-100 transition-colors"
               >
@@ -118,16 +126,23 @@ export default function MainWalletPage() {
                     <transaction.icon className="w-7 h-7" />
                   </div>
                   <div>
-                    <div className="font-semibold text-lg">{transaction.title}</div>
-                    <div className="text-gray-400 text-sm">{transaction.category}</div>
+                    <div className="font-semibold text-lg">
+                      {transaction.title}
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      {transaction.category}
+                    </div>
                   </div>
                 </div>
-                
+
                 <div className="text-right">
                   <div className="font-bold text-lg">
-                    {currencySymbols[currency]}{Math.abs(transaction.amount).toFixed(1)}
+                    {currencySymbols[currency]}
+                    {Math.abs(transaction.amount).toFixed(1)}
                   </div>
-                  <div className="text-gray-400 text-sm">{transaction.date}</div>
+                  <div className="text-gray-400 text-sm">
+                    {transaction.date}
+                  </div>
                 </div>
               </div>
             ))}

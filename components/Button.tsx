@@ -1,6 +1,7 @@
 'use client';
 
 import { usePageStore } from '@/store/usePageStore';
+import Image from 'next/image';
 
 export default function Button() {
   const { currentPage } = usePageStore();
@@ -25,7 +26,7 @@ export default function Button() {
     <button
       className={`h-10 ${bgColor} rounded-xl flex items-center transition-all duration-200`}
     >
-      <img
+      <Image
         src={iconSrc}
         className={`${iconFilter} w-7 ml-4 mr-2`}
         alt="button icon"

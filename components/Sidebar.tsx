@@ -4,6 +4,7 @@ import { usePageStore } from '@/store/usePageStore';
 import { useModalStore } from '@/store/useModalStore';
 import { useState } from 'react';
 import styles from './Sidebar.module.css';
+import Image from 'next/image';
 
 type Page = 'home' | 'statistic' | 'add' | 'wallet' | 'settings';
 
@@ -40,7 +41,7 @@ export default function Sidebar() {
           onClick={() => !isOpen && setIsOpen(true)}
           style={{ cursor: 'pointer', width: '32px', height: '32px' }}
         >
-          <img
+          <Image
             src={
               !isOpen && isLogoHovered
                 ? '/sidebarOpen_icon.svg'
@@ -56,7 +57,7 @@ export default function Sidebar() {
             }}
           />
         </div>
-        <img
+        <Image
           src="/sidebarClose_icon.svg"
           alt="close"
           className={styles.closeIcon}
@@ -65,7 +66,7 @@ export default function Sidebar() {
       </div>
 
       <div className={styles.profile}>
-        <img
+        <Image
           src="/profile_icon.svg"
           alt="profile"
           className={styles.profileIcon}
@@ -97,7 +98,7 @@ export default function Sidebar() {
               }}
               data-label={item.label}
             >
-              <img
+              <Image
                 src={item.icon}
                 alt={item.label}
                 className={styles.navIcon}
