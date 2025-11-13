@@ -11,7 +11,7 @@ export default function MainWalletPage() {
   const [expenses] = useState(1500);
   const [savings] = useState(1000);
 
-  const [currency, setCurrency] = useState<'EUR' | 'KZT' | 'USD'>('EUR');
+  const [currency ] = useState<'EUR' | 'KZT' | 'USD'>('EUR');
 
   const currencySymbols = {
     EUR: '€',

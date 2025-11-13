@@ -1,5 +1,4 @@
 import React from 'react';
-import { ShoppingCart, Gamepad2, Cross } from 'lucide-react';
 
 type TransactionItemProps = {
   icon: React.ElementType;

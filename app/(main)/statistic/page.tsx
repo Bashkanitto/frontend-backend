@@ -71,7 +71,7 @@ export default function StatisticsPage() {
   ];
 
   return (
-    <div className="mx-auto">
+    <div className="mx-auto min-h-screen">
       <div className="grid grid-cols-2 gap-6">
         {/* Balance Chart */}
         <Card className="bg-white rounded-3xl p-8 shadow-sm">
