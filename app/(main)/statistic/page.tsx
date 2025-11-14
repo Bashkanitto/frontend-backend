@@ -1,10 +1,8 @@
-'use client';
-import { useState } from 'react';
 import { Home, ShoppingBasket, Laptop, Gamepad, Plus } from 'lucide-react';
 import { Card } from '@/components/Card';
 
 export default function StatisticsPage() {
-  const [currency] = useState('EUR');
+  const currency: 'EUR' | 'KZT' | 'USD' = 'EUR';
 
   const currencySymbols = {
     EUR: '€',
@@ -73,12 +71,15 @@ export default function StatisticsPage() {
   return (
     <div className="mx-auto min-h-screen">
       <div className="grid grid-cols-2 gap-6">
+        
         {/* Balance Chart */}
         <Card className="bg-white rounded-3xl p-8 shadow-sm">
           <h2 className="text-xl font-bold mb-2">Monthly Balance</h2>
+
           <div className="text-4xl font-bold mb-1">
-            {currencySymbols[currency as 'EUR' | 'KZT' | 'USD']}3,000
+            {currencySymbols[currency]}3,000
           </div>
+
           <div className="text-green-500 text-sm mb-8">
             +500 compared to last month
           </div>
@@ -95,14 +96,14 @@ export default function StatisticsPage() {
                 strokeWidth="2"
                 points="0,120 50,100 100,110 150,80 200,90 250,60 300,70 350,40 400,30"
               />
+
               {[0, 50, 100, 150, 200, 250, 300, 350, 400].map((x, i) => (
                 <circle key={i} cx={x} cy={120 - i * 10} r="4" fill="#000" />
               ))}
             </svg>
+
             <div className="flex justify-between text-xs text-gray-400 mt-2">
-              <span>
-                {currencySymbols[currency as 'EUR' | 'KZT' | 'USD']}5,000
-              </span>
+              <span>{currencySymbols[currency]}5,000</span>
               <span>2</span>
               <span>80</span>
               <span>6</span>
@@ -131,6 +132,7 @@ export default function StatisticsPage() {
                   stroke="#e5e7eb"
                   strokeWidth="20"
                 />
+
                 <circle
                   cx="50"
                   cy="50"
@@ -141,6 +143,7 @@ export default function StatisticsPage() {
                   strokeDasharray="25.12 251.2"
                   strokeDashoffset="0"
                 />
+
                 <circle
                   cx="50"
                   cy="50"
@@ -151,6 +154,7 @@ export default function StatisticsPage() {
                   strokeDasharray="50.24 251.2"
                   strokeDashoffset="-25.12"
                 />
+
                 <circle
                   cx="50"
                   cy="50"
@@ -162,6 +166,7 @@ export default function StatisticsPage() {
                   strokeDashoffset="-75.36"
                 />
               </svg>
+
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <div className="text-2xl font-bold">+80%</div>
               </div>
@@ -209,7 +214,7 @@ export default function StatisticsPage() {
 
               <div className="text-right">
                 <div className="font-bold">
-                  {currencySymbols[currency as 'EUR' | 'KZT' | 'USD']}
+                  {currencySymbols[currency]}
                   {Math.abs(transaction.amount).toFixed(1)}
                 </div>
                 <div className="text-sm text-gray-400">{transaction.date}</div>

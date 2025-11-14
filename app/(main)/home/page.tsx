@@ -1,17 +1,14 @@
-'use client';
-
-import { useState } from 'react';
 import { ArrowUp, ArrowDown, Landmark, ShoppingBasket } from 'lucide-react';
 import { Card } from '@/components/Card';
 
 export default function MainWalletPage() {
-  const [balance] = useState(2500);
-  const [totalBalance] = useState(5000);
-  const [incomes] = useState(3000);
-  const [expenses] = useState(1500);
-  const [savings] = useState(1000);
+  const balance = 2500;
+  const totalBalance = 5000;
+  const incomes = 3000;
+  const expenses = 1500;
+  const savings = 1000;
 
-  const [currency ] = useState<'EUR' | 'KZT' | 'USD'>('EUR');
+  const currency: 'EUR' | 'KZT' | 'USD' = 'EUR';
 
   const currencySymbols = {
     EUR: '€',
@@ -43,20 +40,19 @@ export default function MainWalletPage() {
             {currencySymbols[currency]}
             {balance.toLocaleString()}
           </div>
-          <div className="text-gray-400 text-sm mb-4">Remaining this month</div>
 
-          {/* Progress Bar */}
+          <div className="text-gray-400 text-sm mb-4">
+            Remaining this month
+          </div>
+
+          {/* Progress Bar (static) */}
           <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-            <input
-              type="range"
-              onChange={() => {}}
-              min={0}
-              max={100}
-              value={balancePercentage}
+            <div
               className="absolute top-0 left-0 h-full bg-black rounded-full transition-all duration-300"
               style={{ width: `${balancePercentage}%` }}
             />
           </div>
+
           <div className="text-gray-400 text-sm mt-2">
             {currencySymbols[currency]}
             {totalBalance.toLocaleString()} Total Balance
@@ -144,7 +140,9 @@ export default function MainWalletPage() {
                   {currencySymbols[currency]}
                   {Math.abs(transaction.amount).toFixed(1)}
                 </div>
-                <div className="text-gray-400 text-sm">{transaction.date}</div>
+                <div className="text-gray-400 text-sm">
+                  {transaction.date}
+                </div>
               </div>
             </Card>
           ))}

@@ -1,16 +1,14 @@
-'use client';
-import { useState } from 'react';
 import { ArrowUp, ArrowDown, Landmark, ShoppingBasket } from 'lucide-react';
 import { Card } from '@/components/Card';
 
 export default function MainWalletPage() {
-  const [balance] = useState(2500);
-  const [totalBalance] = useState(5000);
-  const [incomes] = useState(3000);
-  const [expenses] = useState(1500);
-  const [savings] = useState(1000);
+  const balance = 2500;
+  const totalBalance = 5000;
+  const incomes = 3000;
+  const expenses = 1500;
+  const savings = 1000;
 
-  const [currency] = useState<'EUR' | 'KZT' | 'USD'>('EUR');
+  const currency: 'EUR' | 'KZT' | 'USD' = 'EUR';
 
   const currencySymbols = {
     EUR: '€',
@@ -32,9 +30,8 @@ export default function MainWalletPage() {
   const balancePercentage = (balance / totalBalance) * 100;
 
   return (
-    <div className=" w-full min-h-screen">
+    <div className="w-full min-h-screen">
       <div className="mx-auto">
-        {/* Main Balance Card */}
         <Card className="bg-white rounded-3xl p-8 mb-6 shadow-sm">
           <h1 className="text-2xl font-bold mb-2">Main Wallet</h1>
 
@@ -43,17 +40,18 @@ export default function MainWalletPage() {
               {currencySymbols[currency]}
               {balance.toLocaleString()}
             </div>
+
             <div className="text-gray-400 text-sm mb-4">
               Remaining this month
             </div>
 
-            {/* Progress Bar */}
             <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className="absolute top-0 left-0 h-full bg-black rounded-full transition-all duration-300"
                 style={{ width: `${balancePercentage}%` }}
               />
             </div>
+
             <div className="text-gray-400 text-sm mt-2">
               {currencySymbols[currency]}
               {totalBalance.toLocaleString()} Total Balance
@@ -61,9 +59,7 @@ export default function MainWalletPage() {
           </div>
         </Card>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {/* Incomes */}
           <Card className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
@@ -79,7 +75,6 @@ export default function MainWalletPage() {
             </div>
           </Card>
 
-          {/* Expenses */}
           <Card className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
@@ -95,7 +90,6 @@ export default function MainWalletPage() {
             </div>
           </Card>
 
-          {/* Savings */}
           <Card className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
@@ -112,7 +106,6 @@ export default function MainWalletPage() {
           </Card>
         </div>
 
-        {/* Recent Transactions */}
         <Card className="bg-white rounded-3xl pt-8 ">
           <h2 className="text-2xl font-bold mb-6">Recent Transaction</h2>
 
@@ -126,13 +119,10 @@ export default function MainWalletPage() {
                   <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center">
                     <transaction.icon className="w-7 h-7" />
                   </div>
+
                   <div>
-                    <div className="font-semibold text-lg">
-                      {transaction.title}
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      {transaction.category}
-                    </div>
+                    <div className="font-semibold text-lg">{transaction.title}</div>
+                    <div className="text-gray-400 text-sm">{transaction.category}</div>
                   </div>
                 </div>
 
@@ -141,9 +131,7 @@ export default function MainWalletPage() {
                     {currencySymbols[currency]}
                     {Math.abs(transaction.amount).toFixed(1)}
                   </div>
-                  <div className="text-gray-400 text-sm">
-                    {transaction.date}
-                  </div>
+                  <div className="text-gray-400 text-sm">{transaction.date}</div>
                 </div>
               </div>
             ))}
