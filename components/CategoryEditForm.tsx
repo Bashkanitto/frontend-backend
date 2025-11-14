@@ -19,15 +19,15 @@ import {
 } from 'lucide-react';
 
 const iconMap = {
-  ShoppingCart: ShoppingCart,
-  Bus: Bus,
-  Heart: Heart,
-  ShoppingBag: ShoppingBag,
-  Gamepad2: Gamepad2,
-  Plane: Plane,
-  Wallet: Wallet,
-  Banknote: Banknote,
-  Landmark: Landmark,
+  ShoppingCart,
+  Bus,
+  Heart,
+  ShoppingBag,
+  Gamepad2,
+  Plane,
+  Wallet,
+  Banknote,
+  Landmark,
 };
 
 const availableIcons = [
@@ -52,12 +52,10 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
   const [name, setName] = useState(category.name);
   const [selectedIcon, setSelectedIcon] = useState(category.icon);
 
-  const CategoryIcon =
-    iconMap[selectedIcon as keyof typeof iconMap] || ShoppingCart;
+  const CategoryIcon = iconMap[selectedIcon as keyof typeof iconMap] || ShoppingCart;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsEditing(false);
 
     const formData = new FormData();
@@ -69,7 +67,6 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
 
   const handleDelete = async () => {
     setIsEditing(false);
-
     const formData = new FormData();
     formData.append('id', category.id);
     await deleteCategory(formData);
@@ -82,20 +79,25 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
   };
 
   if (!isEditing) {
-    const DisplayIcon =
-      iconMap[category.icon as keyof typeof iconMap] || ShoppingCart;
+    const DisplayIcon = iconMap[category.icon as keyof typeof iconMap] || ShoppingCart;
 
     return (
-      <div className="bg-white rounded-2xl p-6 shadow-sm w-64">
+      <div
+        className="rounded-2xl p-6 shadow-md w-64 border border-[var(--border)]"
+        style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
+      >
         <div className="flex items-center justify-between mb-4">
-          <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
-            <DisplayIcon className="w-6 h-6" />
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: 'var(--secondary-bg)' }}
+          >
+            <DisplayIcon className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
           </div>
           <button
             onClick={() => setIsEditing(true)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 rounded-lg transition-colors hover:bg-[var(--secondary-bg)]"
           >
-            <Edit3 className="w-4 h-4" />
+            <Edit3 className="w-4 h-4" style={{ color: 'var(--foreground)' }} />
           </button>
         </div>
         <h3 className="font-semibold text-lg">{category.name}</h3>
@@ -106,32 +108,36 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl p-6 shadow-sm w-64"
+      className="rounded-2xl p-6 shadow-md w-64"
+      style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
     >
       <div className="flex items-center justify-between mb-4">
-        <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
-          <CategoryIcon className="w-6 h-6" />
+        <div
+          className="w-12 h-12 rounded-2xl flex items-center justify-center"
+          style={{ backgroundColor: 'var(--secondary-bg)' }}
+        >
+          <CategoryIcon className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
         </div>
         <div className="flex gap-2">
           <button
             type="submit"
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 rounded-lg transition-colors hover:bg-[var(--secondary-bg)]"
           >
-            <Save className="w-4 h-4" />
+            <Save className="w-4 h-4" style={{ color: 'var(--foreground)' }} />
           </button>
           <button
             type="button"
             onClick={handleCancel}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 rounded-lg transition-colors hover:bg-[var(--secondary-bg)]"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" style={{ color: 'var(--foreground)' }} />
           </button>
           <button
             type="button"
             onClick={handleDelete}
-            className="p-2 hover:bg-red-50 rounded-lg transition-colors text-red-500"
+            className="p-2 rounded-lg transition-colors hover:bg-red-50"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-4 h-4 text-red-500" />
           </button>
         </div>
       </div>
@@ -140,7 +146,8 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full p-3 border border-gray-200 rounded-xl mb-4 focus:outline-none focus:border-gray-400"
+        className="w-full p-3 rounded-xl mb-4 focus:outline-none"
+        style={{ backgroundColor: 'var(--secondary-bg)', color: 'var(--foreground)' }}
         placeholder="Category name"
       />
 
@@ -153,10 +160,12 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
               type="button"
               onClick={() => setSelectedIcon(icon.name)}
               className={`p-2 rounded-lg transition-colors ${
-                selectedIcon === icon.name ? 'bg-gray-100' : 'hover:bg-gray-50'
+                selectedIcon === icon.name
+                  ? 'bg-[var(--secondary-bg)]'
+                  : 'hover:bg-[var(--page-bg)]'
               }`}
             >
-              <IconComponent className="w-5 h-5" />
+              <IconComponent className="w-5 h-5" style={{ color: 'var(--foreground)' }} />
             </button>
           );
         })}

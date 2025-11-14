@@ -2,6 +2,7 @@ import localFont from 'next/font/local';
 import '@/app/globals.css';
 import RootContent from './RootContent';
 
+
 const inter = localFont({
   src: [
     {

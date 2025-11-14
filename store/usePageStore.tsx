@@ -35,3 +35,23 @@ export const useSidebarState = create<SidebarState>()(
     }
   )
 );
+
+type ThemeMode = 'light' | 'dark' | 'system';
+
+interface ThemeState {
+  themeMode: ThemeMode;
+  setThemeMode: (mode: ThemeMode) => void;
+}
+
+// сохраняем тему
+export const useThemeStore = create<ThemeState>()(
+  persist(
+    (set) => ({
+      themeMode: 'system',
+      setThemeMode: (mode) => set({ themeMode: mode }),
+    }),
+    {
+      name: 'theme-storage',
+    }
+  )
+);

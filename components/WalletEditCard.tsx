@@ -46,7 +46,6 @@ export function WalletEditCard({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsEditing(false);
 
     const formData = new FormData();
@@ -59,7 +58,6 @@ export function WalletEditCard({
 
   const handleDelete = async () => {
     setIsEditing(false);
-
     const formData = new FormData();
     formData.append('id', wallet.id.toString());
     await deleteWallet(formData);
@@ -74,16 +72,22 @@ export function WalletEditCard({
 
   if (!isEditing) {
     return (
-      <div className="bg-white rounded-2xl p-6 shadow-sm">
+      <div
+        className="rounded-2xl p-6 shadow-md border border-[var(--border)]"
+        style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
+      >
         <div className="flex items-center justify-between mb-4">
-          <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
-            <IconComponent className="w-6 h-6" />
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: 'var(--secondary-bg)' }}
+          >
+            <IconComponent className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
           </div>
           <button
             onClick={() => setIsEditing(true)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 rounded-lg transition-colors hover:bg-[var(--secondary-bg)]"
           >
-            <Edit3 className="w-4 h-4" />
+            <Edit3 className="w-4 h-4" style={{ color: 'var(--foreground)' }} />
           </button>
         </div>
         <h3 className="font-semibold text-lg mb-2">{wallet.name}</h3>
@@ -101,32 +105,37 @@ export function WalletEditCard({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl p-6 shadow-sm"
+      className="rounded-2xl p-6 shadow-md"
+      style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
     >
       <div className="flex items-center justify-between mb-4">
-        <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
-          <SelectedIcon className="w-6 h-6" />
+        <div
+          className="w-12 h-12 rounded-2xl flex items-center justify-center"
+          style={{ backgroundColor: 'var(--secondary-bg)' }}
+        >
+          <SelectedIcon className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
         </div>
         <div className="flex gap-2">
           <button
             type="submit"
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 rounded-lg transition-colors hover:bg-[var(--secondary-bg)]"
           >
-            <Save className="w-4 h-4" />
+            <Save className="w-4 h-4" style={{ color: 'var(--foreground)' }} />
           </button>
           <button
             type="button"
             onClick={handleCancel}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 rounded-lg transition-colors hover:bg-[var(--secondary-bg)]"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" style={{ color: 'var(--foreground)' }} />
           </button>
           <button
             type="button"
             onClick={handleDelete}
-            className="p-2 hover:bg-red-50 rounded-lg transition-colors text-red-500"
+            className="p-2 rounded-lg transition-colors hover:bg-red-50"
+            style={{ color: 'var(--foreground)' }}
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-4 h-4 text-red-500" />
           </button>
         </div>
       </div>
@@ -135,7 +144,11 @@ export function WalletEditCard({
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full p-3 border border-gray-200 rounded-xl mb-4 focus:outline-none focus:border-gray-400"
+        className="w-full p-3 rounded-xl mb-4 focus:outline-none"
+        style={{
+          backgroundColor: 'var(--secondary-bg)',
+          color: 'var(--foreground)',
+        }}
         placeholder="Wallet name"
       />
 
@@ -143,7 +156,11 @@ export function WalletEditCard({
         type="number"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
-        className="w-full p-3 border border-gray-200 rounded-xl mb-4 focus:outline-none focus:border-gray-400"
+        className="w-full p-3 rounded-xl mb-4 focus:outline-none"
+        style={{
+          backgroundColor: 'var(--secondary-bg)',
+          color: 'var(--foreground)',
+        }}
         placeholder="Amount"
       />
 
@@ -156,10 +173,12 @@ export function WalletEditCard({
               type="button"
               onClick={() => setSelectedIcon(icon.name)}
               className={`p-2 rounded-lg transition-colors ${
-                selectedIcon === icon.name ? 'bg-gray-100' : 'hover:bg-gray-50'
+                selectedIcon === icon.name
+                  ? 'bg-[var(--secondary-bg)]'
+                  : 'hover:bg-[var(--page-bg)]'
               }`}
             >
-              <IconComponent className="w-5 h-5" />
+              <IconComponent className="w-5 h-5" style={{ color: 'var(--foreground)' }} />
             </button>
           );
         })}

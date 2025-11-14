@@ -63,7 +63,7 @@ export default function Modal() {
       onClick={closeAll}
     >
       <div
-        className="bg-white rounded-3xl shadow-2xl relative overflow-hidden"
+        className="bg-[var(--background)] rounded-3xl shadow-2xl relative overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {renderModalContent()}

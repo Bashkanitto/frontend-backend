@@ -11,22 +11,29 @@ export default function ProfileModal() {
   });
 
   return (
-    <div className="p-8 w-[440px] z-50">
+    <div
+      className="p-8 w-[440px] z-50 rounded-3xl"
+      style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
+    >
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white">
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: 'var(--foreground)', color: 'var(--accent-bg)' }}
+          >
             <User className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
-              {profileData.name}
-            </h2>
-            <p className="text-sm text-gray-500">{profileData.email}</p>
+            <h2 className="text-xl font-bold">{profileData.name}</h2>
+            <p style={{ color: 'var(--secondary-text)' }} className="text-sm">
+              {profileData.email}
+            </p>
           </div>
         </div>
         <button
           onClick={() => closeModal('profile')}
-          className="text-gray-400 hover:text-gray-600 text-2xl"
+          style={{ color: 'var(--secondary-text)' }}
+          className="text-2xl hover:opacity-80 transition"
         >
           ×
         </button>
@@ -34,7 +41,7 @@ export default function ProfileModal() {
 
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">
+          <label className="block text-sm font-semibold mb-2">
             Name
           </label>
           <input
@@ -43,12 +50,17 @@ export default function ProfileModal() {
             onChange={(e) =>
               setProfileData({ ...profileData, name: e.target.value })
             }
-            className="w-full bg-gray-100 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300"
+            className="w-full rounded-xl px-4 py-3 focus:outline-none focus:ring-2"
+            style={{
+              backgroundColor: 'var(--secondary-bg)',
+              color: 'var(--foreground)',
+              borderColor: 'var(--border)',
+            }}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">
+          <label className="block text-sm font-semibold mb-2">
             Email
           </label>
           <input
@@ -57,11 +69,22 @@ export default function ProfileModal() {
             onChange={(e) =>
               setProfileData({ ...profileData, email: e.target.value })
             }
-            className="w-full bg-gray-100 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300"
+            className="w-full rounded-xl px-4 py-3 focus:outline-none focus:ring-2"
+            style={{
+              backgroundColor: 'var(--secondary-bg)',
+              color: 'var(--foreground)',
+              borderColor: 'var(--border)',
+            }}
           />
         </div>
 
-        <button className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 rounded-xl">
+        <button
+          className="w-full font-semibold py-3 rounded-xl transition"
+          style={{
+            backgroundColor: 'var(--foreground)',
+            color: 'var(--accent-bg)',
+          }}
+        >
           Save Changes
         </button>
       </div>
