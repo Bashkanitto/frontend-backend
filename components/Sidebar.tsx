@@ -20,7 +20,7 @@ export default function Sidebar() {
   const { setPage } = usePageStore();
   const { isSidebarOpen, toggleSidebarState } = useSidebarState();
 
-  const [ setActiveItem] = useState('home');
+  const [selectedItem, setSelectedItem] = useState('home');
   const [isLogoHovered, setIsLogoHovered] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
 
@@ -102,7 +102,7 @@ export default function Sidebar() {
                 } else {
                   router.push(`/${item.id}`);
                   setPage(item.id);
-                  setActiveItem(item.id);
+                  setSelectedItem(item.id);
                 }
               }}
             >
