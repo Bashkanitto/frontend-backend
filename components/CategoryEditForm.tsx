@@ -1,88 +1,166 @@
-import Image from 'next/image';
-import { updateCategory, deleteCategory, type Category } from '../app/actions';
+'use client';
 
-type CategoryEditFormProps = {
-  category: Category;
-  isOpen?: boolean;
+import { useState } from 'react';
+import { updateCategory, deleteCategory, Category } from '../app/actions';
+import {
+  ShoppingCart,
+  Bus,
+  Heart,
+  ShoppingBag,
+  Gamepad2,
+  Plane,
+  Wallet,
+  Banknote,
+  Landmark,
+  Edit3,
+  Trash2,
+  Save,
+  X,
+} from 'lucide-react';
+
+const iconMap = {
+  ShoppingCart: ShoppingCart,
+  Bus: Bus,
+  Heart: Heart,
+  ShoppingBag: ShoppingBag,
+  Gamepad2: Gamepad2,
+  Plane: Plane,
+  Wallet: Wallet,
+  Banknote: Banknote,
+  Landmark: Landmark,
 };
 
-export function CategoryEditForm({
-  category,
-  isOpen = false,
-}: CategoryEditFormProps) {
-  return (
-    <div className="m-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-      <details className="group" open={isOpen}>
-        <summary className="h-15 flex px-3 items-center justify-between gap-3 cursor-pointer list-none">
-          <div className="flex items-center gap-3">
-            <Image
-              className="mx-2"
-              alt="categoryicon"
-              height={30}
-              width={30}
-              src={category.icon}
-            />
-            <span className="text-lg font-medium text-black">
-              {category.name}
-            </span>
+const availableIcons = [
+  { name: 'ShoppingCart', component: ShoppingCart },
+  { name: 'Bus', component: Bus },
+  { name: 'Heart', component: Heart },
+  { name: 'ShoppingBag', component: ShoppingBag },
+  { name: 'Gamepad2', component: Gamepad2 },
+  { name: 'Plane', component: Plane },
+  { name: 'Wallet', component: Wallet },
+  { name: 'Banknote', component: Banknote },
+  { name: 'Landmark', component: Landmark },
+];
+
+interface CategoryEditFormProps {
+  category: Category;
+  isOpen: boolean;
+}
+
+export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
+  const [isEditing, setIsEditing] = useState(isOpen);
+  const [name, setName] = useState(category.name);
+  const [selectedIcon, setSelectedIcon] = useState(category.icon);
+
+  const CategoryIcon =
+    iconMap[selectedIcon as keyof typeof iconMap] || ShoppingCart;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setIsEditing(false);
+
+    const formData = new FormData();
+    formData.append('id', category.id);
+    formData.append('name', name);
+    formData.append('icon', selectedIcon);
+    await updateCategory(formData);
+  };
+
+  const handleDelete = async () => {
+    setIsEditing(false);
+
+    const formData = new FormData();
+    formData.append('id', category.id);
+    await deleteCategory(formData);
+  };
+
+  const handleCancel = () => {
+    setName(category.name);
+    setSelectedIcon(category.icon);
+    setIsEditing(false);
+  };
+
+  if (!isEditing) {
+    const DisplayIcon =
+      iconMap[category.icon as keyof typeof iconMap] || ShoppingCart;
+
+    return (
+      <div className="bg-white rounded-2xl p-6 shadow-sm w-64">
+        <div className="flex items-center justify-between mb-4">
+          <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
+            <DisplayIcon className="w-6 h-6" />
           </div>
-          <Image
-            alt="editicon"
-            height={20}
-            width={20}
-            src="/icons/edit_icon.svg"
-            className="group-open:rotate-180 transition-transform"
-          />
-        </summary>
-
-        <div className="px-4 pb-4 pt-2 border-t border-gray-200">
-          <form action={updateCategory} className="space-y-3">
-            <input type="hidden" name="id" value={category.id} />
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                defaultValue={category.name}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Icon Path
-              </label>
-              <input
-                type="text"
-                name="icon"
-                defaultValue={category.icon}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                required
-              />
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                className="flex-1 bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                Save
-              </button>
-              <button
-                type="submit"
-                formAction={deleteCategory}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          </form>
+          <button
+            onClick={() => setIsEditing(true)}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Edit3 className="w-4 h-4" />
+          </button>
         </div>
-      </details>
-    </div>
+        <h3 className="font-semibold text-lg">{category.name}</h3>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-2xl p-6 shadow-sm w-64"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
+          <CategoryIcon className="w-6 h-6" />
+        </div>
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Save className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="p-2 hover:bg-red-50 rounded-lg transition-colors text-red-500"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="w-full p-3 border border-gray-200 rounded-xl mb-4 focus:outline-none focus:border-gray-400"
+        placeholder="Category name"
+      />
+
+      <div className="grid grid-cols-3 gap-2 mb-4">
+        {availableIcons.map((icon) => {
+          const IconComponent = icon.component;
+          return (
+            <button
+              key={icon.name}
+              type="button"
+              onClick={() => setSelectedIcon(icon.name)}
+              className={`p-2 rounded-lg transition-colors ${
+                selectedIcon === icon.name ? 'bg-gray-100' : 'hover:bg-gray-50'
+              }`}
+            >
+              <IconComponent className="w-5 h-5" />
+            </button>
+          );
+        })}
+      </div>
+    </form>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useModalStore } from '@/store/useModalStore';
+import { CreditCard, Tag, ChevronDown } from 'lucide-react';
 
 export default function AddTransactionModal() {
   const [amount, setAmount] = useState('25,00');
@@ -15,6 +16,7 @@ export default function AddTransactionModal() {
     if (amount === '0') setAmount(num);
     else setAmount(amount + num);
   };
+
   return (
     <div className="flex">
       {/* Левая часть — форма */}
@@ -38,14 +40,14 @@ export default function AddTransactionModal() {
 
         <div className="flex gap-3">
           <button className="flex items-center gap-2 bg-gray-200 rounded-xl px-4 py-3 text-sm font-medium hover:bg-gray-300">
-            <span>💳</span>
+            <CreditCard className="w-4 h-4" />
             <span>Wallet</span>
-            <span className="text-gray-500">▼</span>
+            <ChevronDown className="w-3 h-3 text-gray-500" />
           </button>
           <button className="flex items-center gap-2 bg-gray-200 rounded-xl px-4 py-3 text-sm font-medium hover:bg-gray-300">
-            <span>🏷️</span>
+            <Tag className="w-4 h-4" />
             <span>Category</span>
-            <span className="text-gray-500">▼</span>
+            <ChevronDown className="w-3 h-3 text-gray-500" />
           </button>
         </div>
       </div>

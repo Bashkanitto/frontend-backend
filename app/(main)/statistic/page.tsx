@@ -1,4 +1,4 @@
-import { Home, ShoppingBasket, Laptop, Gamepad, Plus } from 'lucide-react';
+import { Home, ShoppingBag, Laptop, Gamepad2, Plus, Heart } from 'lucide-react';
 import { Card } from '@/components/Card';
 
 export default function StatisticsPage() {
@@ -33,7 +33,7 @@ export default function StatisticsPage() {
       category: 'Health',
       amount: -600,
       date: '1 Nov',
-      icon: Plus,
+      icon: Heart,
     },
     {
       id: 4,
@@ -41,7 +41,7 @@ export default function StatisticsPage() {
       category: 'Supermarket',
       amount: -45.3,
       date: 'Today, 16:55',
-      icon: ShoppingBasket,
+      icon: ShoppingBag,
     },
     {
       id: 5,
@@ -49,7 +49,7 @@ export default function StatisticsPage() {
       category: 'Stexlix',
       amount: -750,
       date: 'Nov 12, 11:50',
-      icon: Gamepad,
+      icon: Gamepad2,
     },
     {
       id: 6,
@@ -57,7 +57,7 @@ export default function StatisticsPage() {
       category: 'Steam',
       amount: -750,
       date: 'Oct 28, 12:30',
-      icon: Gamepad,
+      icon: Gamepad2,
     },
   ];
 
@@ -71,7 +71,6 @@ export default function StatisticsPage() {
   return (
     <div className="mx-auto min-h-screen">
       <div className="grid grid-cols-2 gap-6">
-        
         {/* Balance Chart */}
         <Card className="bg-white rounded-3xl p-8 shadow-sm">
           <h2 className="text-xl font-bold mb-2">Monthly Balance</h2>

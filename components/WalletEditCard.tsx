@@ -1,103 +1,169 @@
-import { Edit } from 'lucide-react';
-import { updateWallet, deleteWallet, type Wallet } from '../app/actions';
+'use client';
 
-type WalletEditCardProps = {
-  wallet: Wallet;
-  icon: React.ElementType;
-  currencySymbol: string;
-  isOpen?: boolean;
+import { useState } from 'react';
+import { updateWallet, deleteWallet, Wallet } from '../app/actions';
+import {
+  Wallet as WalletIcon,
+  Banknote,
+  Landmark,
+  Edit3,
+  Trash2,
+  Save,
+  X,
+} from 'lucide-react';
+
+const iconMap = {
+  Wallet: WalletIcon,
+  Banknote: Banknote,
+  Landmark: Landmark,
 };
+
+const availableIcons = [
+  { name: 'Wallet', component: WalletIcon },
+  { name: 'Banknote', component: Banknote },
+  { name: 'Landmark', component: Landmark },
+];
+
+interface WalletEditCardProps {
+  wallet: Wallet;
+  iconName: string;
+  currencySymbol: string;
+  isOpen: boolean;
+}
 
 export function WalletEditCard({
   wallet,
-  icon: Icon,
+  iconName,
   currencySymbol,
-  isOpen = false,
+  isOpen,
 }: WalletEditCardProps) {
-  return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-      <details className="group" open={isOpen}>
-        <summary className="p-6 cursor-pointer list-none">
-          <div className="flex items-start justify-between mb-4">
-            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
-              <Icon className="w-6 h-6" />
-            </div>
-            <button
-              type="button"
-              className="text-gray-400 hover:text-gray-600 group-open:rotate-180 transition-transform"
-            >
-              <Edit className="w-5 h-5" />
-            </button>
+  const [isEditing, setIsEditing] = useState(isOpen);
+  const [name, setName] = useState(wallet.name);
+  const [amount, setAmount] = useState(wallet.amount.toString());
+  const [selectedIcon, setSelectedIcon] = useState(wallet.icon);
+
+  const IconComponent = iconMap[iconName as keyof typeof iconMap] || WalletIcon;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setIsEditing(false);
+
+    const formData = new FormData();
+    formData.append('id', wallet.id.toString());
+    formData.append('name', name);
+    formData.append('amount', amount);
+    formData.append('icon', selectedIcon);
+    await updateWallet(formData);
+  };
+
+  const handleDelete = async () => {
+    setIsEditing(false);
+
+    const formData = new FormData();
+    formData.append('id', wallet.id.toString());
+    await deleteWallet(formData);
+  };
+
+  const handleCancel = () => {
+    setName(wallet.name);
+    setAmount(wallet.amount.toString());
+    setSelectedIcon(wallet.icon);
+    setIsEditing(false);
+  };
+
+  if (!isEditing) {
+    return (
+      <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
+            <IconComponent className="w-6 h-6" />
           </div>
-          <div className="text-gray-600 text-sm mb-1">{wallet.name}</div>
-          <div className="text-3xl font-bold">
-            {currencySymbol}
-            {wallet.amount.toLocaleString()}
-          </div>
-        </summary>
-
-        <div className="px-6 pb-6 pt-2 border-t border-gray-200">
-          <form action={updateWallet} className="space-y-3">
-            <input type="hidden" name="id" value={wallet.id} />
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Wallet Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                defaultValue={wallet.name}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Amount
-              </label>
-              <input
-                type="number"
-                name="amount"
-                defaultValue={wallet.amount}
-                step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Icon (wallet/banknote/landmark)
-              </label>
-              <input
-                type="text"
-                name="icon"
-                defaultValue={wallet.icon}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                required
-              />
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                className="flex-1 bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                Save Changes
-              </button>
-              <button
-                type="submit"
-                formAction={deleteWallet}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          </form>
+          <button
+            onClick={() => setIsEditing(true)}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Edit3 className="w-4 h-4" />
+          </button>
         </div>
-      </details>
-    </div>
+        <h3 className="font-semibold text-lg mb-2">{wallet.name}</h3>
+        <div className="text-2xl font-bold">
+          {currencySymbol}
+          {wallet.amount.toLocaleString()}
+        </div>
+      </div>
+    );
+  }
+
+  const SelectedIcon =
+    iconMap[selectedIcon as keyof typeof iconMap] || WalletIcon;
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-2xl p-6 shadow-sm"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
+          <SelectedIcon className="w-6 h-6" />
+        </div>
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Save className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="p-2 hover:bg-red-50 rounded-lg transition-colors text-red-500"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="w-full p-3 border border-gray-200 rounded-xl mb-4 focus:outline-none focus:border-gray-400"
+        placeholder="Wallet name"
+      />
+
+      <input
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        className="w-full p-3 border border-gray-200 rounded-xl mb-4 focus:outline-none focus:border-gray-400"
+        placeholder="Amount"
+      />
+
+      <div className="flex gap-2 mb-4">
+        {availableIcons.map((icon) => {
+          const IconComponent = icon.component;
+          return (
+            <button
+              key={icon.name}
+              type="button"
+              onClick={() => setSelectedIcon(icon.name)}
+              className={`p-2 rounded-lg transition-colors ${
+                selectedIcon === icon.name ? 'bg-gray-100' : 'hover:bg-gray-50'
+              }`}
+            >
+              <IconComponent className="w-5 h-5" />
+            </button>
+          );
+        })}
+      </div>
+    </form>
   );
 }

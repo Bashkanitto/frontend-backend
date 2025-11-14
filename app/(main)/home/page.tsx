@@ -1,4 +1,4 @@
-import { ArrowUp, ArrowDown, Landmark, ShoppingBasket } from 'lucide-react';
+import { ArrowUp, ArrowDown, Landmark, ShoppingCart } from 'lucide-react';
 import { Card } from '@/components/Card';
 
 export default function MainWalletPage() {
@@ -23,7 +23,7 @@ export default function MainWalletPage() {
       category: 'Supermarket',
       amount: -45.3,
       date: 'Nov 13, 16:55',
-      icon: ShoppingBasket,
+      icon: ShoppingCart,
     },
   ];
 
@@ -41,9 +41,7 @@ export default function MainWalletPage() {
             {balance.toLocaleString()}
           </div>
 
-          <div className="text-gray-400 text-sm mb-4">
-            Remaining this month
-          </div>
+          <div className="text-gray-400 text-sm mb-4">Remaining this month</div>
 
           {/* Progress Bar (static) */}
           <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -140,9 +138,7 @@ export default function MainWalletPage() {
                   {currencySymbols[currency]}
                   {Math.abs(transaction.amount).toFixed(1)}
                 </div>
-                <div className="text-gray-400 text-sm">
-                  {transaction.date}
-                </div>
+                <div className="text-gray-400 text-sm">{transaction.date}</div>
               </div>
             </Card>
           ))}

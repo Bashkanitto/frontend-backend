@@ -10,21 +10,23 @@ import { getWallets } from '../../actions';
 import { WalletEditCard } from '@/components/WalletEditCard';
 
 interface WalletPageProps {
-  searchParams: {
+  searchParams: Promise<{
     open?: string;
-  };
+  }>;
 }
 
-const iconMap = {
-  wallet: Wallet,
-  banknote: Banknote,
-  landmark: Landmark,
+const iconNames = {
+  Wallet: 'Wallet',
+  Banknote: 'Banknote',
+  Landmark: 'Landmark',
 };
 
 export default async function WalletPage({ searchParams }: WalletPageProps) {
+  const { open } = await searchParams; // <-- FIX
+  const openWalletId = open;
+
   const wallets = await getWallets();
   const currency = 'EUR';
-  const openWalletId = searchParams.open;
 
   const currencySymbols = {
     EUR: '€',
@@ -67,7 +69,7 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
             <WalletEditCard
               key={wallet.id}
               wallet={wallet}
-              icon={iconMap[wallet.icon as keyof typeof iconMap]}
+              iconName={wallet.icon}
               currencySymbol={
                 currencySymbols[currency as keyof typeof currencySymbols]
               }

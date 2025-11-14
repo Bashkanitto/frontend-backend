@@ -2,16 +2,25 @@
 
 import { usePageStore, useSidebarState } from '@/store/usePageStore';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/store/useModalStore';
+import {
+  Home,
+  BarChart3,
+  Plus,
+  Wallet,
+  FileText,
+  User,
+  ChevronLeft,
+  Menu,
+} from 'lucide-react';
 
 type Page = 'home' | 'statistic' | 'add' | 'wallet' | 'categories';
 
 type NavItem = {
   id: Page;
   label: string;
-  icon: string;
+  icon: React.ComponentType<{ className?: string }>;
 };
 
 export default function Sidebar() {
@@ -32,11 +41,11 @@ export default function Sidebar() {
   }, []);
 
   const navItems: NavItem[] = [
-    { id: 'home', label: 'Home', icon: '/icons/home_icon.svg' },
-    { id: 'statistic', label: 'Statistic', icon: '/icons/statistic_icon.svg' },
-    { id: 'add', label: 'Add', icon: '/icons/plus_icon.svg' },
-    { id: 'wallet', label: 'Wallet', icon: '/icons/wallet_icon.svg' },
-    { id: 'categories', label: 'Categories', icon: '/icons/file_icon.svg' },
+    { id: 'home', label: 'Home', icon: Home },
+    { id: 'statistic', label: 'Statistic', icon: BarChart3 },
+    { id: 'add', label: 'Add', icon: Plus },
+    { id: 'wallet', label: 'Wallet', icon: Wallet },
+    { id: 'categories', label: 'Categories', icon: FileText },
   ];
 
   return (
@@ -53,22 +62,11 @@ export default function Sidebar() {
             onMouseLeave={() => setIsLogoHovered(false)}
             onClick={() => toggleSidebarState()}
           >
-            <Image
-              className={
-                isLogoHovered
-                  ? 'm-[5px] transition-all duration-300'
-                  : 'transition-all duration-300'
-              }
-              alt="logo"
-              src={
-                isLogoHovered
-                  ? '/icons/sidebarClose_icon.svg'
-                  : '/icons/logo_icon.svg'
-              }
-              width={isLogoHovered ? 30 : 40}
-              height={isLogoHovered ? 30 : 40}
-              unselectable="on"
-            />
+            {isLogoHovered ? (
+              <ChevronLeft className="w-6 h-6 transition-all duration-300" />
+            ) : (
+              <Menu className="w-6 h-6 transition-all duration-300" />
+            )}
           </div>
           <div
             className={`absolute right-1 w-10 h-10 flex justify-center items-center rounded-xl cursor-pointer transition-opacity duration-300 ${
@@ -78,57 +76,49 @@ export default function Sidebar() {
             }`}
             onClick={toggleSidebarState}
           >
-            <Image
-              alt="toggle_icon"
-              src={'/icons/sidebarClose_icon.svg'}
-              width={30}
-              height={30}
-              className={`transition-opacity duration-300 ${
+            <ChevronLeft
+              className={`w-5 h-5 transition-opacity duration-300 ${
                 isSidebarOpen ? 'opacity-100' : 'opacity-0'
               }`}
-              unselectable="on"
             />
           </div>
         </div>
 
         <div className="flex flex-col gap-1 mx-1">
-          {navItems.map((item, index) => (
-            <div
-              key={item.id}
-              className={`hover:bg-[var(--secondary-bg)] h-13 flex items-center pl-2 rounded-xl cursor-pointer`}
-              onClick={() => {
-                if (item.id === 'add') {
-                  openModal('add');
-                } else {
-                  router.push(`/${item.id}`);
-                  setPage(item.id);
-                  setSelectedItem(item.id);
-                }
-              }}
-            >
-              <div className="w-[30px] h-[30px] ml-[4px] flex items-center justify-center flex-shrink-0">
-                <Image
-                  src={item.icon}
-                  alt="icon"
-                  width={30}
-                  height={30}
-                  unselectable="on"
-                />
-              </div>
-              <span
-                className={`ml-3 whitespace-nowrap transition-all duration-300 select-none ${
-                  isSidebarOpen
-                    ? 'opacity-100 translate-x-0'
-                    : 'opacity-0 -translate-x-2 pointer-events-none'
-                }`}
-                style={{
-                  transitionDelay: isSidebarOpen ? `${index * 50}ms` : '0ms',
+          {navItems.map((item, index) => {
+            const IconComponent = item.icon;
+            return (
+              <div
+                key={item.id}
+                className={`hover:bg-[var(--secondary-bg)] h-13 flex items-center pl-2 rounded-xl cursor-pointer`}
+                onClick={() => {
+                  if (item.id === 'add') {
+                    openModal('add');
+                  } else {
+                    router.push(`/${item.id}`);
+                    setPage(item.id);
+                    setSelectedItem(item.id);
+                  }
                 }}
               >
-                {item.label}
-              </span>
-            </div>
-          ))}
+                <div className="w-[30px] h-[30px] ml-[4px] flex items-center justify-center flex-shrink-0">
+                  <IconComponent className="w-5 h-5" />
+                </div>
+                <span
+                  className={`ml-3 whitespace-nowrap transition-all duration-300 select-none ${
+                    isSidebarOpen
+                      ? 'opacity-100 translate-x-0'
+                      : 'opacity-0 -translate-x-2 pointer-events-none'
+                  }`}
+                  style={{
+                    transitionDelay: isSidebarOpen ? `${index * 50}ms` : '0ms',
+                  }}
+                >
+                  {item.label}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -141,13 +131,7 @@ export default function Sidebar() {
         }
       >
         <div className="w-[40px] h-[40px] flex items-center justify-center flex-shrink-0">
-          <Image
-            src={'/icons/profile_icon.svg'}
-            alt="profile_icon"
-            width={40}
-            height={40}
-            unselectable="on"
-          />
+          <User className="w-6 h-6" />
         </div>
         <div className="flex flex-col ml-2 overflow-hidden">
           <span

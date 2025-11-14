@@ -1,5 +1,4 @@
-import Image from 'next/image';
-
+import { User, Settings, LogOut } from 'lucide-react';
 import { useModalStore } from '@/store/useModalStore';
 
 export default function ProfileModal() {
@@ -23,36 +22,21 @@ export default function ProfileModal() {
           className="w-full flex-1 h-[30%] rounded-xl hover:bg-[var(--active-nav-item)] p-1 flex items-center"
           onClick={() => openModal('profile')}
         >
-          <Image
-            alt="profileimg"
-            src={'/icons/profile_icon.svg'}
-            height={35}
-            width={35}
-          ></Image>
+          <User className="w-8 h-8 ml-1" />
           <div className="ml-3 text-xl font-medium select-none">My profile</div>
         </div>
         <div
           className="w-full flex-1 h-[30%] rounded-xl hover:bg-[var(--active-nav-item)] p-1 flex items-center"
           onClick={() => openModal('settings')}
         >
-          <Image
-            alt="settingsimg"
-            src={'/icons/settings_icon.svg'}
-            height={35}
-            width={35}
-          ></Image>
+          <Settings className="w-8 h-8 ml-1" />
           <div className="ml-3 text-xl font-medium select-none">Settings</div>
         </div>
         <div
           className="w-full flex-1 h-[30%] rounded-xl hover:bg-[var(--active-nav-item)] p-1 flex items-center"
           onClick={() => openModal('logout')}
         >
-          <Image
-            alt="logoutimg"
-            src={'/icons/logout_icon.svg'}
-            height={35}
-            width={35}
-          ></Image>
+          <LogOut className="w-8 h-8 ml-1" />
           <div className="ml-3 text-xl font-medium select-none">Exit</div>
         </div>
       </div>

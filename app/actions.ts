@@ -17,18 +17,18 @@ export type Wallet = {
 };
 
 let categories: Category[] = [
-  { id: '1', name: 'Food', icon: '/icons/cart_icon.svg' },
-  { id: '2', name: 'Transport', icon: '/icons/bus_icon.svg' },
-  { id: '3', name: 'Health', icon: '/icons/health_icon.svg' },
-  { id: '4', name: 'Shopping', icon: '/icons/shop_icon.svg' },
-  { id: '5', name: 'Entertainment', icon: '/icons/gamepad_icon.svg' },
-  { id: '6', name: 'Travel', icon: '/icons/plane_icon.svg' },
+  { id: '1', name: 'Food', icon: 'ShoppingCart' },
+  { id: '2', name: 'Transport', icon: 'Bus' },
+  { id: '3', name: 'Health', icon: 'Heart' },
+  { id: '4', name: 'Shopping', icon: 'ShoppingBag' },
+  { id: '5', name: 'Entertainment', icon: 'Gamepad2' },
+  { id: '6', name: 'Travel', icon: 'Plane' },
 ];
 
 let wallets: Wallet[] = [
-  { id: 1, name: 'Wallet', amount: 3000, icon: 'wallet' },
-  { id: 2, name: 'Cash', amount: 6000, icon: 'banknote' },
-  { id: 3, name: 'Savings', amount: 1000, icon: 'landmark' },
+  { id: 1, name: 'Wallet', amount: 3000, icon: 'Wallet' },
+  { id: 2, name: 'Cash', amount: 6000, icon: 'Banknote' },
+  { id: 3, name: 'Savings', amount: 1000, icon: 'Landmark' },
 ];
 
 export async function getCategories(): Promise<Category[]> {
