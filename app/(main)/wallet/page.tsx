@@ -1,19 +1,36 @@
-import { Wallet, Banknote, Landmark, ShoppingBag, Gamepad2, Plane, Edit } from 'lucide-react';
+import {
+  Wallet,
+  Banknote,
+  Landmark,
+  ShoppingBag,
+  Gamepad2,
+  Plane,
+} from 'lucide-react';
+import { getWallets } from '../../actions';
+import { WalletEditCard } from '@/components/WalletEditCard';
 
-export default function MainWalletPage() {
+interface WalletPageProps {
+  searchParams: {
+    open?: string;
+  };
+}
+
+const iconMap = {
+  wallet: Wallet,
+  banknote: Banknote,
+  landmark: Landmark,
+};
+
+export default async function WalletPage({ searchParams }: WalletPageProps) {
+  const wallets = await getWallets();
   const currency = 'EUR';
+  const openWalletId = searchParams.open;
 
   const currencySymbols = {
     EUR: '€',
     KZT: '₸',
     USD: '$',
   };
-
-  const wallets = [
-    { id: 1, name: 'Wallet', amount: 3000, icon: Wallet },
-    { id: 2, name: 'Cash', amount: 6000, icon: Banknote },
-    { id: 3, name: 'Savings', amount: 1000, icon: Landmark },
-  ];
 
   const recentTransactions = [
     {
@@ -45,31 +62,20 @@ export default function MainWalletPage() {
   return (
     <div className="w-full min-h-screen p-6">
       <div className="max-w-5xl mx-auto">
-        {/* Wallet Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
           {wallets.map((wallet) => (
-            <div
+            <WalletEditCard
               key={wallet.id}
-              className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
-                  <wallet.icon className="w-6 h-6" />
-                </div>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <Edit className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="text-gray-600 text-sm mb-1">{wallet.name}</div>
-              <div className="text-3xl font-bold">
-                {currencySymbols[currency as keyof typeof currencySymbols]}
-                {wallet.amount.toLocaleString()}
-              </div>
-            </div>
+              wallet={wallet}
+              icon={iconMap[wallet.icon as keyof typeof iconMap]}
+              currencySymbol={
+                currencySymbols[currency as keyof typeof currencySymbols]
+              }
+              isOpen={wallet.id.toString() === openWalletId}
+            />
           ))}
         </div>
 
-        {/* Recent Transactions */}
         <div className="bg-white rounded-3xl p-8 shadow-sm">
           <h2 className="text-3xl font-bold mb-6">Recent Transactions</h2>
 
