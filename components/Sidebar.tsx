@@ -30,7 +30,7 @@ export default function Sidebar() {
 
   const { setPage } = usePageStore();
   const { isSidebarOpen, toggleSidebarState } = useSidebarState();
-  const { isRegistered } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
 
   const [selectedItem, setSelectedItem] = useState('home');
   const [isLogoHovered, setIsLogoHovered] = useState(false);
@@ -125,46 +125,53 @@ export default function Sidebar() {
         </div>
       </div>
 
-<div
-  className="mb-4 py-2 mr-1 ml-[6px] px-1 flex hover:bg-[var(--sidebar-hover)] rounded-xl items-center cursor-pointer"
-  onClick={() =>
-    isRegistered
-      ? (isOpen('profileModal') ? closeModal('profileModal') : openModal('profileModal'))
-      : router.push('/login') // например, редирект на страницу входа
-  }
->
-  <div className="w-[40px] h-[40px] flex items-center justify-center flex-shrink-0">
-    <User className="icon-filter w-6 h-6" />
-  </div>
-
-  {isRegistered ? (
-    <div className="flex flex-col ml-2 overflow-hidden">
-      <span
-        className={`text-[var(--accent-text)] font-bold whitespace-nowrap transition-all duration-300 ease-in-out text-[20px] pb-1 select-none ${
-          isSidebarOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none'
-        }`}
+      <div
+        className="mb-4 py-2 mr-1 ml-[6px] px-1 flex hover:bg-[var(--sidebar-hover)] rounded-xl items-center cursor-pointer"
+        onClick={() =>
+          isAuthenticated
+            ? isOpen('profileModal')
+              ? closeModal('profileModal')
+              : openModal('profileModal')
+            : router.push('/login')
+        }
       >
-        Иван Иванов
-      </span>
-      <span
-        className={`text-[var(--secondary-text)] font-bold whitespace-nowrap transition-all duration-300 ease-in-out select-none ${
-          isSidebarOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none'
-        }`}
-      >
-        Visa Debit *1000
-      </span>
-    </div>
-  ) : (
-    <span
-      className={`ml-2 text-[var(--accent-text)] font-bold transition-all duration-300 ease-in-out select-none ${
-        isSidebarOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none'
-      }`}
-    >
-      Войти
-    </span>
-  )}
-</div>
+        <div className="w-[40px] h-[40px] flex items-center justify-center flex-shrink-0">
+          <User className="icon-filter w-6 h-6" />
+        </div>
 
+        {isAuthenticated && user ? (
+          <div className="flex flex-col ml-2 overflow-hidden">
+            <span
+              className={`text-[var(--accent-text)] font-bold whitespace-nowrap transition-all duration-300 ease-in-out text-[20px] pb-1 select-none ${
+                isSidebarOpen
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 -translate-x-2 pointer-events-none'
+              }`}
+            >
+              {user.username}
+            </span>
+            <span
+              className={`text-[var(--secondary-text)] font-bold whitespace-nowrap transition-all duration-300 ease-in-out select-none ${
+                isSidebarOpen
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 -translate-x-2 pointer-events-none'
+              }`}
+            >
+              {user.email}
+            </span>
+          </div>
+        ) : (
+          <span
+            className={`ml-2 text-[var(--accent-text)] font-bold transition-all duration-300 ease-in-out select-none ${
+              isSidebarOpen
+                ? 'opacity-100 translate-x-0'
+                : 'opacity-0 -translate-x-2 pointer-events-none'
+            }`}
+          >
+            Sign in
+          </span>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useSettingsStore } from '@/store/useSettingsStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import Modal from '@/components/Modal';
@@ -12,33 +13,28 @@ export default function RootContent({
   children: React.ReactNode;
 }) {
   const themeMode = useSettingsStore((state) => state.themeMode);
+  const { checkAuth } = useAuthStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  // Добавь это для отладки
-  useEffect(() => {
-    console.log('🎨 Current themeMode:', themeMode);
-    console.log('🔧 Mounted:', mounted);
-  }, [themeMode, mounted]);
+    checkAuth(); // Проверяем авторизацию при загрузке
+  }, [checkAuth]);
 
   const getThemeClass = () => {
     if (!mounted) return 'colors';
-    
+
     if (themeMode === 'light') return 'colors-light';
     if (themeMode === 'dark') return 'colors-dark';
     return 'colors';
   };
 
   const themeClass = getThemeClass();
-  
-  // Еще одна проверка
-  console.log('📦 Final class:', themeClass);
 
   return (
-    <div className={`${themeClass} flex w-full h-screen bg-[var(--background)]`}>
+    <div
+      className={`${themeClass} flex w-full h-screen bg-[var(--background)]`}
+    >
       <Sidebar />
       <div className="flex flex-col flex-1 h-full pt-5">
         <Header />

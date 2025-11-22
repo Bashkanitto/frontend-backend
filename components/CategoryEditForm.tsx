@@ -1,7 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { updateCategory, deleteCategory, Category } from '../app/actions';
+import { useAuthStore } from '@/store/useAuthStore';
+import {
+  updateUserCategory,
+  deleteUserCategory,
+  Category,
+} from '@/lib/userData';
 import {
   ShoppingCart,
   Bus,
@@ -45,31 +50,37 @@ const availableIcons = [
 interface CategoryEditFormProps {
   category: Category;
   isOpen: boolean;
+  onUpdate: () => void;
 }
 
-export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
+export function CategoryEditForm({
+  category,
+  isOpen,
+  onUpdate,
+}: CategoryEditFormProps) {
+  const { user } = useAuthStore();
   const [isEditing, setIsEditing] = useState(isOpen);
   const [name, setName] = useState(category.name);
   const [selectedIcon, setSelectedIcon] = useState(category.icon);
 
-  const CategoryIcon = iconMap[selectedIcon as keyof typeof iconMap] || ShoppingCart;
+  const CategoryIcon =
+    iconMap[selectedIcon as keyof typeof iconMap] || ShoppingCart;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsEditing(false);
+    if (!user?.id) return;
 
-    const formData = new FormData();
-    formData.append('id', category.id);
-    formData.append('name', name);
-    formData.append('icon', selectedIcon);
-    await updateCategory(formData);
+    setIsEditing(false);
+    updateUserCategory(user.id, category.id, name, selectedIcon);
+    onUpdate();
   };
 
   const handleDelete = async () => {
+    if (!user?.id) return;
+
     setIsEditing(false);
-    const formData = new FormData();
-    formData.append('id', category.id);
-    await deleteCategory(formData);
+    deleteUserCategory(user.id, category.id);
+    onUpdate();
   };
 
   const handleCancel = () => {
@@ -79,19 +90,26 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
   };
 
   if (!isEditing) {
-    const DisplayIcon = iconMap[category.icon as keyof typeof iconMap] || ShoppingCart;
+    const DisplayIcon =
+      iconMap[category.icon as keyof typeof iconMap] || ShoppingCart;
 
     return (
       <div
         className="rounded-2xl p-6 shadow-md w-64 border border-[var(--border)]"
-        style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
+        style={{
+          backgroundColor: 'var(--accent-bg)',
+          color: 'var(--foreground)',
+        }}
       >
         <div className="flex items-center justify-between mb-4">
           <div
             className="w-12 h-12 rounded-2xl flex items-center justify-center"
             style={{ backgroundColor: 'var(--secondary-bg)' }}
           >
-            <DisplayIcon className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
+            <DisplayIcon
+              className="w-6 h-6"
+              style={{ color: 'var(--foreground)' }}
+            />
           </div>
           <button
             onClick={() => setIsEditing(true)}
@@ -109,14 +127,20 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
     <form
       onSubmit={handleSubmit}
       className="rounded-2xl p-6 shadow-md w-64"
-      style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
+      style={{
+        backgroundColor: 'var(--accent-bg)',
+        color: 'var(--foreground)',
+      }}
     >
       <div className="flex items-center justify-between mb-4">
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center"
           style={{ backgroundColor: 'var(--secondary-bg)' }}
         >
-          <CategoryIcon className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
+          <CategoryIcon
+            className="w-6 h-6"
+            style={{ color: 'var(--foreground)' }}
+          />
         </div>
         <div className="flex gap-2">
           <button
@@ -147,7 +171,10 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
         value={name}
         onChange={(e) => setName(e.target.value)}
         className="w-full p-3 rounded-xl mb-4 focus:outline-none"
-        style={{ backgroundColor: 'var(--secondary-bg)', color: 'var(--foreground)' }}
+        style={{
+          backgroundColor: 'var(--secondary-bg)',
+          color: 'var(--foreground)',
+        }}
         placeholder="Category name"
       />
 
@@ -165,7 +192,10 @@ export function CategoryEditForm({ category, isOpen }: CategoryEditFormProps) {
                   : 'hover:bg-[var(--page-bg)]'
               }`}
             >
-              <IconComponent className="w-5 h-5" style={{ color: 'var(--foreground)' }} />
+              <IconComponent
+                className="w-5 h-5"
+                style={{ color: 'var(--foreground)' }}
+              />
             </button>
           );
         })}

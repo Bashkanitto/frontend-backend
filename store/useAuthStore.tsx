@@ -1,42 +1,165 @@
 import { create } from 'zustand';
-import { useEffect, useState } from 'react';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
-interface AuthState {
-  isRegistered: boolean;
-  setRegistered: (status: boolean) => void;
-  toggleRegistered: () => void;
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  createdAt: string;
 }
 
-const STORAGE_KEY = 'auth_isRegistered';
+interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
 
-export const useAuthStore = create<AuthState>((set) => ({
-  isRegistered: false, // дефолтное значение, SSR-safe
+  // Actions
+  register: (
+    username: string,
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; error?: string }>;
+  login: (
+    emailOrUsername: string,
+    password: string
+  ) => Promise<{ success: boolean; error?: string }>;
+  logout: () => void;
+  checkAuth: () => void;
+}
 
-  setRegistered: (status: boolean) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, String(status));
-    }
-    set({ isRegistered: status });
+const USERS_KEY = 'void_users';
+
+const cookieStorage = {
+  getItem: (name: string): string | null => {
+    if (typeof document === 'undefined') return null;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+    return null;
   },
-
-  toggleRegistered: () =>
-    set((state) => {
-      const newStatus = !state.isRegistered;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, String(newStatus));
-      }
-      return { isRegistered: newStatus };
-    }),
-}));
-
-// Хук для инициализации из localStorage на клиенте
-export const useAuthInit = () => {
-  const setRegistered = useAuthStore((state) => state.setRegistered);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      setRegistered(stored === 'true');
-    }
-  }, [setRegistered]);
+  setItem: (name: string, value: string): void => {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=${value}; path=/; max-age=2592000; SameSite=Lax`;
+  },
+  removeItem: (name: string): void => {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  },
 };
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      isAuthenticated: false,
+
+      register: async (username: string, email: string, password: string) => {
+        try {
+          const usersData = localStorage.getItem(USERS_KEY);
+          const users: User[] = usersData ? JSON.parse(usersData) : [];
+
+          const emailExists = users.some(
+            (u) => u.email.toLowerCase() === email.toLowerCase()
+          );
+          if (emailExists) {
+            return { success: false, error: 'Email already registered' };
+          }
+
+          const usernameExists = users.some(
+            (u) => u.username.toLowerCase() === username.toLowerCase()
+          );
+          if (usernameExists) {
+            return { success: false, error: 'Username already taken' };
+          }
+
+          const newUser: User = {
+            id: Date.now().toString(),
+            username,
+            email,
+            createdAt: new Date().toISOString(),
+          };
+
+          const passwordsData = localStorage.getItem('void_passwords');
+          const passwords = passwordsData ? JSON.parse(passwordsData) : {};
+          passwords[newUser.id] = password;
+          localStorage.setItem('void_passwords', JSON.stringify(passwords));
+
+          users.push(newUser);
+          localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+          set({ user: newUser, isAuthenticated: true });
+
+          return { success: true };
+        } catch (error) {
+          console.error('Registration error:', error);
+          return { success: false, error: 'Registration failed' };
+        }
+      },
+
+      login: async (emailOrUsername: string, password: string) => {
+        try {
+          const usersData = localStorage.getItem(USERS_KEY);
+          const users: User[] = usersData ? JSON.parse(usersData) : [];
+
+          const user = users.find(
+            (u) =>
+              u.email.toLowerCase() === emailOrUsername.toLowerCase() ||
+              u.username.toLowerCase() === emailOrUsername.toLowerCase()
+          );
+
+          if (!user) {
+            return { success: false, error: 'User not found' };
+          }
+
+          const passwordsData = localStorage.getItem('void_passwords');
+          const passwords = passwordsData ? JSON.parse(passwordsData) : {};
+          const storedPassword = passwords[user.id];
+
+          if (storedPassword !== password) {
+            return { success: false, error: 'Incorrect password' };
+          }
+
+          set({ user, isAuthenticated: true });
+          return { success: true };
+        } catch (error) {
+          console.error('Login error:', error);
+          return { success: false, error: 'Login failed' };
+        }
+      },
+
+      logout: () => {
+        set({ user: null, isAuthenticated: false });
+      },
+
+      checkAuth: () => {
+        const state = get();
+        if (state.user && !state.isAuthenticated) {
+          set({ isAuthenticated: true });
+        }
+      },
+    }),
+    {
+      name: 'void-auth-storage',
+      storage: createJSONStorage(() => ({
+        getItem: (name) => {
+          const localValue = localStorage.getItem(name);
+          if (localValue) {
+            cookieStorage.setItem(name, localValue);
+          }
+          return localValue;
+        },
+        setItem: (name, value) => {
+          localStorage.setItem(name, value);
+          cookieStorage.setItem(name, value);
+        },
+        removeItem: (name) => {
+          localStorage.removeItem(name);
+          cookieStorage.removeItem(name);
+        },
+      })),
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    }
+  )
+);

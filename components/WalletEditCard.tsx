@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { updateWallet, deleteWallet, Wallet } from '../app/actions';
+import { useAuthStore } from '@/store/useAuthStore';
+import { updateUserWallet, deleteUserWallet, Wallet } from '@/lib/userData';
 import {
   Wallet as WalletIcon,
   Banknote,
@@ -29,6 +30,7 @@ interface WalletEditCardProps {
   iconName: string;
   currencySymbol: string;
   isOpen: boolean;
+  onUpdate: () => void;
 }
 
 export function WalletEditCard({
@@ -36,7 +38,9 @@ export function WalletEditCard({
   iconName,
   currencySymbol,
   isOpen,
+  onUpdate,
 }: WalletEditCardProps) {
+  const { user } = useAuthStore();
   const [isEditing, setIsEditing] = useState(isOpen);
   const [name, setName] = useState(wallet.name);
   const [amount, setAmount] = useState(wallet.amount.toString());
@@ -46,21 +50,25 @@ export function WalletEditCard({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsEditing(false);
+    if (!user?.id) return;
 
-    const formData = new FormData();
-    formData.append('id', wallet.id.toString());
-    formData.append('name', name);
-    formData.append('amount', amount);
-    formData.append('icon', selectedIcon);
-    await updateWallet(formData);
+    setIsEditing(false);
+    updateUserWallet(
+      user.id,
+      wallet.id,
+      name,
+      parseFloat(amount),
+      selectedIcon
+    );
+    onUpdate();
   };
 
   const handleDelete = async () => {
+    if (!user?.id) return;
+
     setIsEditing(false);
-    const formData = new FormData();
-    formData.append('id', wallet.id.toString());
-    await deleteWallet(formData);
+    deleteUserWallet(user.id, wallet.id);
+    onUpdate();
   };
 
   const handleCancel = () => {
@@ -74,14 +82,20 @@ export function WalletEditCard({
     return (
       <div
         className="rounded-2xl p-6 shadow-md border border-[var(--border)]"
-        style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
+        style={{
+          backgroundColor: 'var(--accent-bg)',
+          color: 'var(--foreground)',
+        }}
       >
         <div className="flex items-center justify-between mb-4">
           <div
             className="w-12 h-12 rounded-2xl flex items-center justify-center"
             style={{ backgroundColor: 'var(--secondary-bg)' }}
           >
-            <IconComponent className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
+            <IconComponent
+              className="w-6 h-6"
+              style={{ color: 'var(--foreground)' }}
+            />
           </div>
           <button
             onClick={() => setIsEditing(true)}
@@ -106,14 +120,20 @@ export function WalletEditCard({
     <form
       onSubmit={handleSubmit}
       className="rounded-2xl p-6 shadow-md"
-      style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
+      style={{
+        backgroundColor: 'var(--accent-bg)',
+        color: 'var(--foreground)',
+      }}
     >
       <div className="flex items-center justify-between mb-4">
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center"
           style={{ backgroundColor: 'var(--secondary-bg)' }}
         >
-          <SelectedIcon className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
+          <SelectedIcon
+            className="w-6 h-6"
+            style={{ color: 'var(--foreground)' }}
+          />
         </div>
         <div className="flex gap-2">
           <button
@@ -178,7 +198,10 @@ export function WalletEditCard({
                   : 'hover:bg-[var(--page-bg)]'
               }`}
             >
-              <IconComponent className="w-5 h-5" style={{ color: 'var(--foreground)' }} />
+              <IconComponent
+                className="w-5 h-5"
+                style={{ color: 'var(--foreground)' }}
+              />
             </button>
           );
         })}

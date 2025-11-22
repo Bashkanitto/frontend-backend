@@ -1,11 +1,27 @@
+'use client';
+
 import { useModalStore } from '@/store/useModalStore';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useRouter } from 'next/navigation';
 
 export default function LogoutModal() {
   const { closeModal } = useModalStore();
+  const { logout } = useAuthStore();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    closeModal('logout');
+    router.push('/login');
+  };
+
   return (
     <div
       className="p-8 w-[380px] rounded-3xl"
-      style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}
+      style={{
+        backgroundColor: 'var(--accent-bg)',
+        color: 'var(--foreground)',
+      }}
     >
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">Confirm Log Out</h2>
@@ -25,7 +41,7 @@ export default function LogoutModal() {
       <div className="flex gap-3">
         <button
           onClick={() => closeModal('logout')}
-          className="flex-1 font-semibold py-3 rounded-xl transition"
+          className="flex-1 font-semibold py-3 rounded-xl transition hover:opacity-90"
           style={{
             backgroundColor: 'var(--secondary-bg)',
             color: 'var(--foreground)',
@@ -34,17 +50,14 @@ export default function LogoutModal() {
           Cancel
         </button>
         <button
-          onClick={() => {
-            console.log('Logging out...');
-            closeModal('logout');
-          }}
-          className="flex-1 font-semibold py-3 rounded-xl transition"
+          onClick={handleLogout}
+          className="flex-1 font-semibold py-3 rounded-xl transition hover:opacity-90"
           style={{
             backgroundColor: 'var(--foreground)',
             color: 'var(--accent-bg)',
           }}
         >
-          OK
+          Log Out
         </button>
       </div>
     </div>
