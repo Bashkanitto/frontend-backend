@@ -5,10 +5,9 @@ type ModalName =
   | 'addCategory'
   | 'addWallet'
   | 'profile'
-  | 'login'
+  | 'profileMenu'
   | 'settings'
-  | 'logout'
-  | 'profileModal';
+  | 'logout';
 
 type ModalStore = {
   openModal: (name: ModalName) => void;
@@ -24,10 +23,9 @@ export const useModalStore = create<ModalStore>((set, get) => ({
     addCategory: false,
     addWallet: false,
     profile: false,
-    login: false,
+    profileMenu: false,
     settings: false,
     logout: false,
-    profileModal: false,
   },
 
   openModal: (name) =>

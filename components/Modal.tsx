@@ -5,18 +5,15 @@ import { useEffect } from 'react';
 import AddWalletModal from './modals/AddWalletModal';
 import AddCategoryModal from './modals/AddCategoryModal';
 import AddTransactionModal from './modals/AddTransactionModal';
-import MyProfileModal from './modals/MyProfileModal';
-import SettingsModal from './modals/SettingsModal';
-import LogoutModal from './modals/LogoutModal';
+import AccountModal from './modals/AccountModal';
 
 export default function Modal() {
   const { isOpen, closeAll } = useModalStore();
 
-
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
-        closeAll(); // закрываем все модалки
+        closeAll();
       }
     }
 
@@ -27,33 +24,19 @@ export default function Modal() {
     };
   }, [closeAll]);
 
-  // Если ни одно модальное окно не открыто
-  if (
-    !isOpen('add') &&
-    !isOpen('addCategory') &&
-    !isOpen('addWallet') &&
-    !isOpen('profile') &&
-    !isOpen('settings') &&
-    !isOpen('logout')
-  )
-    return null;
+  const hasOpenModal =
+    isOpen('add') ||
+    isOpen('addCategory') ||
+    isOpen('addWallet') ||
+    isOpen('profileMenu'); // Теперь только одна модалка для профиля
 
-  // Рендер содержимого в зависимости от активного модального окна
+  if (!hasOpenModal) return null;
+
   const renderModalContent = () => {
-    if (isOpen('add')) {
-      return <AddTransactionModal />;
-    } else if (isOpen('addCategory')) {
-      return <AddCategoryModal />;
-    } else if (isOpen('addWallet')) {
-      return <AddWalletModal />;
-    } else if (isOpen('profile')) {
-      return <MyProfileModal />;
-    } else if (isOpen('settings')) {
-      return <SettingsModal />;
-    } else if (isOpen('logout')) {
-      return <LogoutModal />;
-    }
-
+    if (isOpen('add')) return <AddTransactionModal />;
+    if (isOpen('addCategory')) return <AddCategoryModal />;
+    if (isOpen('addWallet')) return <AddWalletModal />;
+    if (isOpen('profileMenu')) return <AccountModal />; // Новая единая модалка
     return null;
   };
 

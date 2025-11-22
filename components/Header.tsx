@@ -13,10 +13,9 @@ export default function Header() {
     categories: 'Categories',
     statistic: 'Statistic',
     wallet: 'Wallets',
-    add: '',
+    transactions: 'Transactions',
   };
 
-  // Выбор логики onClick в зависимости от страницы
   const handleClick = () => {
     if (currentPage === 'wallet') {
       openModal('addWallet');

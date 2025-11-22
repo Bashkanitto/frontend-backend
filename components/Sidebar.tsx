@@ -1,23 +1,23 @@
 'use client';
 
-import { usePageStore, useSidebarState } from '@/store/usePageStore';
 import { useState, useEffect } from 'react';
+import { usePageStore, useSidebarState } from '@/store/usePageStore';
 import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/store/useModalStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import {
   Home,
   BarChart3,
-  Plus,
-  Wallet,
   FileText,
+  Wallet,
+  Tag,
   User,
   ChevronLeft,
   ChevronRight,
-  Menu,
 } from 'lucide-react';
+import Image from 'next/image';
 
-type Page = 'home' | 'statistic' | 'add' | 'wallet' | 'categories';
+type Page = 'home' | 'statistic' | 'transactions' | 'wallet' | 'categories';
 
 type NavItem = {
   id: Page;
@@ -27,16 +27,13 @@ type NavItem = {
 
 export default function Sidebar() {
   const router = useRouter();
-
   const { setPage } = usePageStore();
   const { isSidebarOpen, toggleSidebarState } = useSidebarState();
   const { user, isAuthenticated } = useAuthStore();
-
   const [selectedItem, setSelectedItem] = useState('home');
   const [isLogoHovered, setIsLogoHovered] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
-
-  const { isOpen, openModal, closeModal } = useModalStore();
+  const { openModal } = useModalStore();
 
   useEffect(() => {
     const timer = setTimeout(() => setHasMounted(true), 0);
@@ -46,10 +43,18 @@ export default function Sidebar() {
   const navItems: NavItem[] = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'statistic', label: 'Statistic', icon: BarChart3 },
-    { id: 'add', label: 'Add', icon: Plus },
+    { id: 'transactions', label: 'Transactions', icon: FileText },
     { id: 'wallet', label: 'Wallet', icon: Wallet },
-    { id: 'categories', label: 'Categories', icon: FileText },
+    { id: 'categories', label: 'Categories', icon: Tag },
   ];
+
+  const handleProfileClick = () => {
+    if (isAuthenticated) {
+      openModal('profileMenu');
+    } else {
+      router.push('/login');
+    }
+  };
 
   return (
     <div
@@ -68,7 +73,13 @@ export default function Sidebar() {
             {isLogoHovered ? (
               <ChevronRight className="icon-filter w-6 h-6 transition-all duration-300" />
             ) : (
-              <Menu className="icon-filter w-6 h-6 transition-all duration-300" />
+              <Image
+                src="/icons/logo_icon.svg"
+                alt="Void Logo"
+                width={24}
+                height={24}
+                className="icon-filter transition-all duration-300"
+              />
             )}
           </div>
           <div
@@ -95,13 +106,9 @@ export default function Sidebar() {
                 key={item.id}
                 className={`hover:bg-[var(--sidebar-hover)] h-13 flex items-center pl-2 rounded-xl cursor-pointer`}
                 onClick={() => {
-                  if (item.id === 'add') {
-                    openModal('add');
-                  } else {
-                    router.push(`/${item.id}`);
-                    setPage(item.id);
-                    setSelectedItem(item.id);
-                  }
+                  router.push(`/${item.id}`);
+                  setPage(item.id);
+                  setSelectedItem(item.id);
                 }}
               >
                 <div className="w-[30px] h-[30px] ml-[4px] flex items-center justify-center flex-shrink-0">
@@ -127,13 +134,7 @@ export default function Sidebar() {
 
       <div
         className="mb-4 py-2 mr-1 ml-[6px] px-1 flex hover:bg-[var(--sidebar-hover)] rounded-xl items-center cursor-pointer"
-        onClick={() =>
-          isAuthenticated
-            ? isOpen('profileModal')
-              ? closeModal('profileModal')
-              : openModal('profileModal')
-            : router.push('/login')
-        }
+        onClick={handleProfileClick}
       >
         <div className="w-[40px] h-[40px] flex items-center justify-center flex-shrink-0">
           <User className="icon-filter w-6 h-6" />

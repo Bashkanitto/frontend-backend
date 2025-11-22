@@ -15,7 +15,7 @@ export default function Button({ onClick }: ButtonProps) {
     categories: 'Add category',
     statistic: 'Add transaction',
     wallet: 'Add wallet',
-    add: '',
+    transactions: 'Add transaction',
   };
 
   return (

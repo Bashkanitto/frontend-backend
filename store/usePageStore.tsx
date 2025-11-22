@@ -1,9 +1,9 @@
 'use client';
 
 import { create } from 'zustand';
-import { persist} from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
-type Page = 'home' | 'statistic' | 'add' | 'wallet' | 'categories';
+type Page = 'home' | 'statistic' | 'transactions' | 'wallet' | 'categories';
 
 interface pageState {
   currentPage: Page;
@@ -21,7 +21,6 @@ interface SidebarState {
   setisSidebarOpen: (value: boolean) => void;
 }
 
-// сохраняем состояние sidebar
 export const useSidebarState = create<SidebarState>()(
   persist(
     (set) => ({
@@ -43,7 +42,6 @@ interface ThemeState {
   setThemeMode: (mode: ThemeMode) => void;
 }
 
-// сохраняем тему
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
