@@ -1,152 +1,308 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useLayoutEffect } from 'react';
 import { Card } from '@/components/Card';
 import {
   Search,
-  Filter,
-  ArrowUpDown,
   Calendar,
   DollarSign,
-  Tag,
   ShoppingBag,
   Gamepad2,
   Plane,
   Laptop,
   Heart,
+  CalendarDays,
+  ArrowUp,
+  ArrowDown,
 } from 'lucide-react';
+
+type TransactionCategory =
+  | 'Supermarket'
+  | 'Entertainment'
+  | 'Travel'
+  | 'Electronics'
+  | 'Health'
+  | 'Work';
 
 type Transaction = {
   id: string;
   title: string;
-  category: string;
+  category: TransactionCategory;
   amount: number;
   date: string;
   icon: React.ComponentType<{ className?: string }>;
 };
 
+type SortField = 'date' | 'amount';
+type SortOrder = 'asc' | 'desc';
+type DateFilterType = 'all' | 'week' | 'month' | 'year' | 'custom';
+
+const DateInput = ({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const cursorRef = useRef<number | null>(null);
+
+  useLayoutEffect(() => {
+    if (inputRef.current && cursorRef.current !== null) {
+      inputRef.current.setSelectionRange(cursorRef.current, cursorRef.current);
+      cursorRef.current = null;
+    }
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target;
+    const rawValue = input.value;
+    const selectionStart = input.selectionStart || 0;
+
+    let digitsBeforeCursor = 0;
+    for (let i = 0; i < selectionStart; i++) {
+      if (/\d/.test(rawValue[i])) {
+        digitsBeforeCursor++;
+      }
+    }
+
+    const digits = rawValue.replace(/\D/g, '');
+
+    if (digits.length > 8) return;
+
+    let formattedValue = '';
+    if (digits.length > 0) {
+      formattedValue += digits.substring(0, 2);
+      if (digits.length >= 3) {
+        formattedValue += '-' + digits.substring(2, 4);
+      }
+      if (digits.length >= 5) {
+        formattedValue += '-' + digits.substring(4, 8);
+      }
+    }
+
+    let newCursorPos = 0;
+    let digitsSeen = 0;
+
+    for (let i = 0; i < formattedValue.length; i++) {
+      if (digitsSeen === digitsBeforeCursor) break;
+      if (/\d/.test(formattedValue[i])) digitsSeen++;
+      newCursorPos++;
+    }
+
+    if (
+      newCursorPos < formattedValue.length &&
+      formattedValue[newCursorPos] === '-' &&
+      rawValue.length > value.length
+    ) {
+      newCursorPos++;
+    }
+
+    cursorRef.current = newCursorPos;
+    onChange(formattedValue);
+  };
+
+  return (
+    <div>
+      <label className="block mb-1.5 text-xs font-bold text-[var(--secondary-text)] uppercase tracking-wide">
+        {label}
+      </label>
+      <div className="relative group">
+        <CalendarDays className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--secondary-text)] group-focus-within:text-[var(--primary)] transition-colors pointer-events-none" />
+        <input
+          ref={inputRef}
+          type="text"
+          inputMode="numeric"
+          placeholder="DD-MM-YYYY"
+          value={value}
+          onChange={handleChange}
+          className="w-full pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all font-mono"
+          style={{
+            backgroundColor: 'var(--secondary-bg)',
+            color: 'var(--foreground)',
+            border: '1px solid var(--border)',
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'USD',
+    signDisplay: 'always',
+  }).format(amount);
+};
+
+const formatDate = (dateString: string) => {
+  const d = new Date(dateString);
+  if (isNaN(d.getTime())) return 'Invalid Date';
+  return new Intl.DateTimeFormat('ru-RU', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(d);
+};
+
+const parseDMY = (dateStr: string): Date | null => {
+  if (dateStr.length !== 10) return null;
+  const [day, month, year] = dateStr.split('-').map(Number);
+  if (!day || !month || !year) return null;
+  if (month < 1 || month > 12) return null;
+  if (day < 1 || day > 31) return null;
+  if (year < 1000) return null;
+  return new Date(year, month - 1, day);
+};
+
+const today = new Date();
+const getPastDate = (days: number) => {
+  const d = new Date();
+  d.setDate(today.getDate() - days);
+  return d.toISOString();
+};
+
+const MOCK_TRANSACTIONS: Transaction[] = [
+  {
+    id: '1',
+    title: 'Groceries',
+    category: 'Supermarket',
+    amount: -45.3,
+    date: getPastDate(0),
+    icon: ShoppingBag,
+  },
+  {
+    id: '2',
+    title: 'Steam Game',
+    category: 'Entertainment',
+    amount: -15.99,
+    date: getPastDate(1),
+    icon: Gamepad2,
+  },
+  {
+    id: '3',
+    title: 'Trip to Italy',
+    category: 'Travel',
+    amount: -298.42,
+    date: getPastDate(3),
+    icon: Plane,
+  },
+  {
+    id: '4',
+    title: 'MacBook Repair',
+    category: 'Electronics',
+    amount: -750.0,
+    date: getPastDate(10),
+    icon: Laptop,
+  },
+  {
+    id: '5',
+    title: 'Insurance',
+    category: 'Health',
+    amount: -600.0,
+    date: getPastDate(25),
+    icon: Heart,
+  },
+  {
+    id: '6',
+    title: 'November Salary',
+    category: 'Work',
+    amount: 2500.0,
+    date: getPastDate(32),
+    icon: DollarSign,
+  },
+];
+
+const CATEGORIES: (TransactionCategory | 'all')[] = [
+  'all',
+  'Supermarket',
+  'Entertainment',
+  'Travel',
+  'Electronics',
+  'Health',
+  'Work',
+];
+
 export default function TransactionsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [dateFilter, setDateFilter] = useState<
-    'all' | 'week' | 'month' | 'year'
-  >('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<SortField>('date');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [dateFilter, setDateFilter] = useState<DateFilterType>('all');
 
-  const transactions: Transaction[] = [
-    {
-      id: '1',
-      title: 'Groceries',
-      category: 'Supermarket',
-      amount: -45.3,
-      date: 'Today, 16:55',
-      icon: ShoppingBag,
-    },
-    {
-      id: '2',
-      title: 'Entertainment',
-      category: 'Steam',
-      amount: -15.99,
-      date: 'Nov 12, 11:50',
-      icon: Gamepad2,
-    },
-    {
-      id: '3',
-      title: 'Travel',
-      category: 'Italy',
-      amount: -298.42,
-      date: 'Nov 10, 09:30',
-      icon: Plane,
-    },
-    {
-      id: '4',
-      title: 'Laptop Repair',
-      category: 'Electronics',
-      amount: -750.0,
-      date: 'Nov 8, 14:20',
-      icon: Laptop,
-    },
-    {
-      id: '5',
-      title: 'Health Insurance',
-      category: 'Health',
-      amount: -600.0,
-      date: 'Nov 5, 10:15',
-      icon: Heart,
-    },
-    {
-      id: '6',
-      title: 'Salary',
-      category: 'Work',
-      amount: 2500.0,
-      date: 'Nov 1, 08:00',
-      icon: DollarSign,
-    },
-  ];
-
-  const categories = [
-    'all',
-    'Supermarket',
-    'Entertainment',
-    'Travel',
-    'Electronics',
-    'Health',
-    'Work',
-  ];
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
 
   const filteredTransactions = useMemo(() => {
-    let filtered = transactions.filter(
-      (transaction) =>
-        transaction.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        transaction.category.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(
-        (transaction) => transaction.category === selectedCategory
-      );
-    }
-
     const now = new Date();
-    if (dateFilter !== 'all') {
-      filtered = filtered.filter((transaction) => {
-        // Для демо - просто фильтруем по количеству дней от текущей даты
-        const daysAgo =
-          parseInt(transaction.date.split(' ')[1]?.replace(',', '')) || 1;
-        return (
-          daysAgo <=
-          (dateFilter === 'week' ? 7 : dateFilter === 'month' ? 30 : 365)
-        );
-      });
-    }
 
-    filtered.sort((a, b) => {
-      let aValue, bValue;
+    return MOCK_TRANSACTIONS.filter((t) => {
+      const matchesSearch =
+        t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        t.category.toLowerCase().includes(searchQuery.toLowerCase());
 
-      if (sortBy === 'date') {
-        // Для демо - сортируем по "дням назад"
-        aValue = parseInt(a.date.split(' ')[1]?.replace(',', '')) || 0;
-        bValue = parseInt(b.date.split(' ')[1]?.replace(',', '')) || 0;
-      } else {
-        aValue = Math.abs(a.amount);
-        bValue = Math.abs(b.amount);
+      const matchesCategory =
+        selectedCategory === 'all' || t.category === selectedCategory;
+
+      let matchesDate = true;
+      const tDate = new Date(t.date);
+
+      if (dateFilter === 'custom') {
+        const start = parseDMY(customStartDate);
+        const end = parseDMY(customEndDate);
+
+        if (start) {
+          start.setHours(0, 0, 0, 0);
+          if (tDate < start) matchesDate = false;
+        }
+
+        if (end && matchesDate) {
+          end.setHours(23, 59, 59, 999);
+          if (tDate > end) matchesDate = false;
+        }
+      } else if (dateFilter !== 'all') {
+        const diffTime = Math.abs(now.getTime() - tDate.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (dateFilter === 'week') matchesDate = diffDays <= 7;
+        else if (dateFilter === 'month') matchesDate = diffDays <= 30;
+        else if (dateFilter === 'year') matchesDate = diffDays <= 365;
       }
 
-      return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+      return matchesSearch && matchesCategory && matchesDate;
+    }).sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === 'date') {
+        comparison = new Date(a.date).getTime() - new Date(b.date).getTime();
+      } else {
+        comparison = a.amount - b.amount;
+      }
+      return sortOrder === 'asc' ? comparison : -comparison;
     });
-
-    return filtered;
   }, [
-    transactions,
     searchQuery,
     selectedCategory,
     dateFilter,
     sortBy,
     sortOrder,
+    customStartDate,
+    customEndDate,
   ]);
 
-  const toggleSort = (field: 'date' | 'amount') => {
+  const stats = useMemo(() => {
+    const income = filteredTransactions
+      .filter((t) => t.amount > 0)
+      .reduce((acc, t) => acc + t.amount, 0);
+    const expense = filteredTransactions
+      .filter((t) => t.amount < 0)
+      .reduce((acc, t) => acc + t.amount, 0);
+    return { income, expense, balance: income + expense };
+  }, [filteredTransactions]);
+
+  const toggleSort = (field: SortField) => {
     if (sortBy === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -155,141 +311,59 @@ export default function TransactionsPage() {
     }
   };
 
-  const getAmountColor = (amount: number) => {
-    return amount >= 0 ? 'text-green-600' : 'text-red-600';
+  const getSortIcon = (field: SortField) => {
+    if (sortBy !== field) return null;
+
+    return sortOrder === 'asc' ? (
+      <ArrowUp className="w-4 h-4 ml-1.5 animate-in fade-in zoom-in duration-200" />
+    ) : (
+      <ArrowDown className="w-4 h-4 ml-1.5 animate-in fade-in zoom-in duration-200" />
+    );
   };
 
-  const getAmountSign = (amount: number) => {
-    return amount >= 0 ? '+' : '';
+  const inputStyles = {
+    backgroundColor: 'var(--secondary-bg)',
+    color: 'var(--foreground)',
+    border: '1px solid var(--border)',
   };
 
-  const totalIncome = transactions
-    .filter((t) => t.amount > 0)
-    .reduce((sum, t) => sum + t.amount, 0);
-  const totalExpenses = Math.abs(
-    transactions
-      .filter((t) => t.amount < 0)
-      .reduce((sum, t) => sum + t.amount, 0)
-  );
-  const totalBalance = transactions.reduce((sum, t) => sum + t.amount, 0);
+  const activeBtnClass =
+    'bg-[var(--sidebar-active)] text-[var(--foreground)] cursor-pointer shadow-sm ring-1 ring-black/5';
+  const inactiveBtnClass =
+    'bg-[var(--secondary-bg)] text-[var(--secondary-text)] hover:text-[var(--foreground)] hover:bg-[var(--border)] cursor-pointer';
 
   return (
-    <div className="mx-auto min-h-screen">
-      {/* Header with Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card
-          className="rounded-2xl p-6"
-          style={{ backgroundColor: 'var(--accent-bg)' }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm" style={{ color: 'var(--secondary-text)' }}>
-                Total Transactions
-              </p>
-              <p className="text-2xl font-bold text-[var(--foreground)]">
-                {transactions.length}
-              </p>
-            </div>
-            <DollarSign className="w-8 h-8 text-[var(--foreground)]" />
-          </div>
-        </Card>
-
-        <Card
-          className="rounded-2xl p-6"
-          style={{ backgroundColor: 'var(--accent-bg)' }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm" style={{ color: 'var(--secondary-text)' }}>
-                Income
-              </p>
-              <p className="text-2xl font-bold text-green-600">
-                +${totalIncome.toFixed(2)}
-              </p>
-            </div>
-            <ArrowUpDown className="w-8 h-8 text-green-600" />
-          </div>
-        </Card>
-
-        <Card
-          className="rounded-2xl p-6"
-          style={{ backgroundColor: 'var(--accent-bg)' }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm" style={{ color: 'var(--secondary-text)' }}>
-                Expenses
-              </p>
-              <p className="text-2xl font-bold text-red-600">
-                -${totalExpenses.toFixed(2)}
-              </p>
-            </div>
-            <ArrowUpDown className="w-8 h-8 text-red-600" />
-          </div>
-        </Card>
-
-        <Card
-          className="rounded-2xl p-6"
-          style={{ backgroundColor: 'var(--accent-bg)' }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm" style={{ color: 'var(--secondary-text)' }}>
-                Balance
-              </p>
-              <p className="text-2xl font-bold text-[var(--foreground)]">
-                ${totalBalance.toFixed(2)}
-              </p>
-            </div>
-            <DollarSign className="w-8 h-8 text-[var(--foreground)]" />
-          </div>
-        </Card>
-      </div>
-
-      {/* Filters and Search */}
-      <Card
-        className="rounded-3xl p-6 mb-6"
-        style={{ backgroundColor: 'var(--accent-bg)' }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {/* Search */}
-          <div className="md:col-span-2">
-            <label className="block mb-2 text-sm font-medium text-[var(--secondary-text)]">
+    <div className="mx-auto min-h-screen max-w-6xl p-4">
+      <Card className="rounded-3xl p-6 mb-6 shadow-lg bg-[var(--accent-bg)]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+          <div className="md:col-span-4">
+            <label className="block mb-1.5 text-xs font-bold text-[var(--secondary-text)] uppercase tracking-wide">
               Search
             </label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--secondary-text)]" />
+            <div className="relative group">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--secondary-text)] group-focus-within:text-[var(--primary)] transition-colors" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search transactions..."
-                className="w-full pl-10 pr-4 py-2 rounded-xl focus:outline-none"
-                style={{
-                  backgroundColor: 'var(--secondary-bg)',
-                  color: 'var(--foreground)',
-                  border: '1px solid var(--border)',
-                }}
+                placeholder="Search..."
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
+                style={inputStyles}
               />
             </div>
           </div>
 
-          {/* Category Filter */}
-          <div>
-            <label className="block mb-2 text-sm font-medium text-[var(--secondary-text)]">
+          <div className="md:col-span-3">
+            <label className="block mb-1.5 text-xs font-bold text-[var(--secondary-text)] uppercase tracking-wide">
               Category
             </label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-4 py-2 rounded-xl focus:outline-none"
-              style={{
-                backgroundColor: 'var(--secondary-bg)',
-                color: 'var(--foreground)',
-                border: '1px solid var(--border)',
-              }}
+              className="w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none cursor-pointer"
+              style={inputStyles}
             >
-              {categories.map((category) => (
+              {CATEGORIES.map((category) => (
                 <option key={category} value={category}>
                   {category === 'all' ? 'All Categories' : category}
                 </option>
@@ -297,73 +371,100 @@ export default function TransactionsPage() {
             </select>
           </div>
 
-          {/* Date Filter */}
-          <div>
-            <label className="block mb-2 text-sm font-medium text-[var(--secondary-text)]">
-              Period
+          <div className="md:col-span-3">
+            <label className="block mb-1.5 text-xs font-bold text-[var(--secondary-text)] uppercase tracking-wide">
+              Time Period
             </label>
             <select
               value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value as any)}
-              className="w-full px-4 py-2 rounded-xl focus:outline-none"
-              style={{
-                backgroundColor: 'var(--secondary-bg)',
-                color: 'var(--foreground)',
-                border: '1px solid var(--border)',
+              onChange={(e) => {
+                setDateFilter(e.target.value as DateFilterType);
+                if (e.target.value !== 'custom') {
+                  setCustomStartDate('');
+                  setCustomEndDate('');
+                }
               }}
+              className="w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none cursor-pointer"
+              style={inputStyles}
             >
               <option value="all">All Time</option>
               <option value="week">Last Week</option>
               <option value="month">Last Month</option>
               <option value="year">Last Year</option>
+              <option value="custom">Custom Range...</option>
             </select>
+          </div>
+
+          <div className="md:col-span-2 flex gap-2">
+            <button
+              onClick={() => toggleSort('date')}
+              className={`flex-1 flex justify-center items-center p-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                sortBy === 'date' ? activeBtnClass : inactiveBtnClass
+              }`}
+              title={
+                sortBy === 'date'
+                  ? `Sort by Date (${sortOrder})`
+                  : 'Sort by Date'
+              }
+            >
+              <Calendar className="w-4 h-4" />
+
+              {getSortIcon('date')}
+            </button>
+
+            <button
+              onClick={() => toggleSort('amount')}
+              className={`flex-1 flex justify-center items-center p-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                sortBy === 'amount' ? activeBtnClass : inactiveBtnClass
+              }`}
+              title={
+                sortBy === 'amount'
+                  ? `Sort by Amount (${sortOrder})`
+                  : 'Sort by Amount'
+              }
+            >
+              <DollarSign className="w-4 h-4" />
+
+              {getSortIcon('amount')}
+            </button>
           </div>
         </div>
 
-        {/* Sort Options */}
-        <div className="flex gap-4 mt-4">
-          <button
-            onClick={() => toggleSort('date')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${
-              sortBy === 'date'
-                ? 'bg-[var(--sidebar-active)]'
-                : 'bg-[var(--secondary-bg)]'
-            }`}
-            style={{ color: 'var(--foreground)' }}
-          >
-            <Calendar className="w-4 h-4" />
-            <span>Date</span>
-            <ArrowUpDown className="w-3 h-3" />
-          </button>
-
-          <button
-            onClick={() => toggleSort('amount')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${
-              sortBy === 'amount'
-                ? 'bg-[var(--sidebar-active)]'
-                : 'bg-[var(--secondary-bg)]'
-            }`}
-            style={{ color: 'var(--foreground)' }}
-          >
-            <DollarSign className="w-4 h-4" />
-            <span>Amount</span>
-            <ArrowUpDown className="w-3 h-3" />
-          </button>
-        </div>
+        {dateFilter === 'custom' && (
+          <div className="mt-4 pt-4 border-t border-[var(--border)] grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-1 duration-200">
+            <DateInput
+              label="From Date"
+              value={customStartDate}
+              onChange={setCustomStartDate}
+            />
+            <DateInput
+              label="To Date"
+              value={customEndDate}
+              onChange={setCustomEndDate}
+            />
+          </div>
+        )}
       </Card>
 
-      {/* Transactions List */}
       <Card
-        className="rounded-3xl p-6"
-        style={{ backgroundColor: 'var(--accent-bg)' }}
+        className="rounded-3xl p-8 shadow-lg mt-6"
+        style={{
+          backgroundColor: 'var(--accent-bg)',
+          color: 'var(--foreground)',
+        }}
       >
-        <h2 className="text-2xl font-bold mb-6 text-[var(--foreground)]">
-          All Transactions ({filteredTransactions.length})
-        </h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold">All Transactions</h2>
+          <span className="text-sm font-medium px-3 py-1 rounded-full bg-[var(--background-darker)] text-[var(--secondary-text)]">
+            {filteredTransactions.length} items
+          </span>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {filteredTransactions.map((transaction) => {
             const IconComponent = transaction.icon;
+            const isPositive = transaction.amount >= 0;
+
             return (
               <Card
                 key={transaction.id}
@@ -386,7 +487,7 @@ export default function TransactionsPage() {
                   <div>
                     <div className="font-semibold">{transaction.title}</div>
                     <div
-                      className="text-sm"
+                      className="text-sm mt-0.5"
                       style={{ color: 'var(--secondary-text)' }}
                     >
                       {transaction.category}
@@ -396,16 +497,15 @@ export default function TransactionsPage() {
 
                 <div className="text-right">
                   <div
-                    className={`font-bold ${getAmountColor(transaction.amount)}`}
+                    className={`font-bold text-lg ${isPositive ? 'text-green-500' : ''}`}
                   >
-                    {getAmountSign(transaction.amount)}$
-                    {Math.abs(transaction.amount).toFixed(2)}
+                    {formatCurrency(transaction.amount)}
                   </div>
                   <div
                     className="text-sm"
                     style={{ color: 'var(--secondary-text)' }}
                   >
-                    {transaction.date}
+                    {formatDate(transaction.date)}
                   </div>
                 </div>
               </Card>
@@ -414,15 +514,16 @@ export default function TransactionsPage() {
         </div>
 
         {filteredTransactions.length === 0 && (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-[var(--secondary-bg)] rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="flex flex-col items-center justify-center py-12 text-center opacity-60">
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+              style={{ backgroundColor: 'var(--background-darker)' }}
+            >
               <Search className="w-8 h-8 text-[var(--secondary-text)]" />
             </div>
-            <h3 className="text-lg font-medium text-[var(--foreground)] mb-2">
-              No transactions found
-            </h3>
-            <p className="text-sm text-[var(--secondary-text)]">
-              Try adjusting your search or filters
+            <h3 className="text-lg font-medium">No transactions found</h3>
+            <p className="text-sm text-[var(--secondary-text)] mt-1">
+              Try adjusting your filters
             </p>
           </div>
         )}
