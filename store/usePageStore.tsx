@@ -3,7 +3,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-type Page = 'home' | 'statistic' | 'transactions' | 'wallet' | 'categories';
+export type Page =
+  | 'home'
+  | 'statistic'
+  | 'transactions'
+  | 'wallet'
+  | 'categories';
 
 interface pageState {
   currentPage: Page;

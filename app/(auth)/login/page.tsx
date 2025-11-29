@@ -56,7 +56,7 @@ export default function SignInPage() {
         <span className="text-4xl font-bold mb-4">Sign In</span>
 
         {error && (
-          <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl">
+          <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-1 rounded-xl">
             {error}
           </div>
         )}
@@ -103,7 +103,7 @@ export default function SignInPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-40 h-15 bg-black rounded-xl mt-2 hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-15 bg-black rounded-xl mt-2 hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="text-white text-xl font-bold">
               {loading ? 'Loading...' : 'Sign in'}
@@ -118,7 +118,7 @@ export default function SignInPage() {
           Forgot password?
         </button>
 
-        <div className="w-full border border-gray-300 my-4" />
+        <div className="w-full border border-gray-300 my-2" />
 
         <div className="flex flex-col gap-3 w-3/4">
           <button
@@ -151,7 +151,7 @@ export default function SignInPage() {
           </button>
         </div>
 
-        <div className="flex items-center mt-6">
+        <div className="flex items-center mt-2">
           <span>Not a member?</span>
           <Link
             href="/signup"

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useRef, useLayoutEffect } from 'react';
-import { Card } from '@/components/Card';
+import { Card } from '@/components/ui/card';
 import {
   Search,
   Calendar,

@@ -1,5 +1,5 @@
 import { ArrowUp, ArrowDown, Landmark, ShoppingCart } from 'lucide-react';
-import { Card } from '@/components/Card';
+import { Card } from '@/components/ui/card';
 
 export default function MainWalletPage() {
   const balance = 2500;
@@ -32,7 +32,13 @@ export default function MainWalletPage() {
   return (
     <div className="mx-auto">
       {/* Main Balance Card */}
-      <Card className="p-8 mb-6" style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--foreground)' }}>
+      <Card
+        className="p-8 mb-6"
+        style={{
+          backgroundColor: 'var(--accent-bg)',
+          color: 'var(--foreground)',
+        }}
+      >
         <h1 className="text-2xl font-bold mb-2">Main Wallet</h1>
 
         <div className="mt-6">
@@ -41,17 +47,31 @@ export default function MainWalletPage() {
             {balance.toLocaleString()}
           </div>
 
-          <div className="text-sm mb-4" style={{ color: 'var(--secondary-text)' }}>Remaining this month</div>
+          <div
+            className="text-sm mb-4"
+            style={{ color: 'var(--secondary-text)' }}
+          >
+            Remaining this month
+          </div>
 
           {/* Progress Bar (static) */}
-          <div className="relative w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--secondary-bg)' }}>
+          <div
+            className="relative w-full h-2 rounded-full overflow-hidden"
+            style={{ backgroundColor: 'var(--secondary-bg)' }}
+          >
             <div
               className="absolute top-0 left-0 h-full rounded-full transition-all duration-300"
-              style={{ width: `${balancePercentage}%`, backgroundColor: 'var(--foreground)' }}
+              style={{
+                width: `${balancePercentage}%`,
+                backgroundColor: 'var(--foreground)',
+              }}
             />
           </div>
 
-          <div className="text-sm mt-2" style={{ color: 'var(--secondary-text)' }}>
+          <div
+            className="text-sm mt-2"
+            style={{ color: 'var(--secondary-text)' }}
+          >
             {currencySymbols[currency]}
             {totalBalance.toLocaleString()} Total Balance
           </div>
@@ -61,13 +81,27 @@ export default function MainWalletPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {/* Incomes */}
-        <Card className="rounded-2xl p-6 shadow-sm" style={{ backgroundColor: 'var(--accent-bg)' }}>
+        <Card
+          className="rounded-2xl p-6 shadow-sm"
+          style={{ backgroundColor: 'var(--accent-bg)' }}
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--secondary-bg)' }}>
-              <ArrowUp className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: 'var(--secondary-bg)' }}
+            >
+              <ArrowUp
+                className="w-6 h-6"
+                style={{ color: 'var(--foreground)' }}
+              />
             </div>
             <div>
-              <div className="text-sm" style={{ color: 'var(--secondary-text)' }}>Incomes</div>
+              <div
+                className="text-sm"
+                style={{ color: 'var(--secondary-text)' }}
+              >
+                Incomes
+              </div>
               <div className="text-[var(--foreground)] text-3xl font-bold">
                 {currencySymbols[currency]}
                 {incomes.toLocaleString()}
@@ -77,13 +111,27 @@ export default function MainWalletPage() {
         </Card>
 
         {/* Expenses */}
-        <Card className="rounded-2xl p-6 shadow-sm" style={{ backgroundColor: 'var(--accent-bg)' }}>
+        <Card
+          className="rounded-2xl p-6 shadow-sm"
+          style={{ backgroundColor: 'var(--accent-bg)' }}
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--secondary-bg)' }}>
-              <ArrowDown className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: 'var(--secondary-bg)' }}
+            >
+              <ArrowDown
+                className="w-6 h-6"
+                style={{ color: 'var(--foreground)' }}
+              />
             </div>
             <div>
-              <div className=" text-sm" style={{ color: 'var(--secondary-text)' }}>Expenses</div>
+              <div
+                className=" text-sm"
+                style={{ color: 'var(--secondary-text)' }}
+              >
+                Expenses
+              </div>
               <div className="text-[var(--foreground)] text-3xl font-bold">
                 {currencySymbols[currency]}
                 {expenses.toLocaleString()}
@@ -93,13 +141,27 @@ export default function MainWalletPage() {
         </Card>
 
         {/* Savings */}
-        <Card className="rounded-2xl p-6 shadow-sm" style={{ backgroundColor: 'var(--accent-bg)' }}>
+        <Card
+          className="rounded-2xl p-6 shadow-sm"
+          style={{ backgroundColor: 'var(--accent-bg)' }}
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--secondary-bg)' }}>
-              <Landmark className="w-6 h-6" style={{ color: 'var(--foreground)' }} />
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: 'var(--secondary-bg)' }}
+            >
+              <Landmark
+                className="w-6 h-6"
+                style={{ color: 'var(--foreground)' }}
+              />
             </div>
             <div>
-              <div className="text-sm" style={{ color: 'var(--secondary-text)' }}>Savings</div>
+              <div
+                className="text-sm"
+                style={{ color: 'var(--secondary-text)' }}
+              >
+                Savings
+              </div>
               <div className="text-[var(--foreground)] text-3xl font-bold">
                 {currencySymbols[currency]}
                 {savings.toLocaleString()}
@@ -124,12 +186,25 @@ export default function MainWalletPage() {
               }}
             >
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: 'var(--accent-bg)' }}>
-                  <transaction.icon className="w-7 h-7" style={{ color: 'var(--foreground)' }} />
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                  style={{ backgroundColor: 'var(--accent-bg)' }}
+                >
+                  <transaction.icon
+                    className="w-7 h-7"
+                    style={{ color: 'var(--foreground)' }}
+                  />
                 </div>
                 <div>
-                  <div className="font-semibold text-lg">{transaction.title}</div>
-                  <div className="text-sm" style={{ color: 'var(--secondary-text)' }}>{transaction.category}</div>
+                  <div className="font-semibold text-lg">
+                    {transaction.title}
+                  </div>
+                  <div
+                    className="text-sm"
+                    style={{ color: 'var(--secondary-text)' }}
+                  >
+                    {transaction.category}
+                  </div>
                 </div>
               </div>
 
@@ -138,7 +213,12 @@ export default function MainWalletPage() {
                   {currencySymbols[currency]}
                   {Math.abs(transaction.amount).toFixed(1)}
                 </div>
-                <div className="text-sm" style={{ color: 'var(--secondary-text)' }}>{transaction.date}</div>
+                <div
+                  className="text-sm"
+                  style={{ color: 'var(--secondary-text)' }}
+                >
+                  {transaction.date}
+                </div>
               </div>
             </Card>
           ))}

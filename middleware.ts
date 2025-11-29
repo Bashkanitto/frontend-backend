@@ -3,11 +3,11 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  
+
   const authCookie = request.cookies.get('void-auth-storage');
-  
+
   let isAuthenticated = false;
-  
+
   if (authCookie?.value) {
     try {
       const authData = JSON.parse(decodeURIComponent(authCookie.value));
@@ -19,16 +19,18 @@ export function middleware(request: NextRequest) {
   }
 
   const protectedPaths = ['/home', '/statistic', '/wallet', '/categories'];
-  const isProtectedPath = protectedPaths.some(p => path.startsWith(p));
+  const isProtectedPath = protectedPaths.some((p) => path.startsWith(p));
 
   const publicPaths = ['/login', '/signup'];
-  const isPublicPath = publicPaths.some(p => path.startsWith(p));
+  const isPublicPath = publicPaths.some((p) => path.startsWith(p));
 
   if (isProtectedPath && !isAuthenticated) {
+    console.error('Unauthorized access attempt to protected path:', path);
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   if (isPublicPath && isAuthenticated) {
+    console.error('Authenticated user trying to access public path:', path);
     return NextResponse.redirect(new URL('/home', request.url));
   }
 

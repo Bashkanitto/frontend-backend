@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { getUserWallets, Wallet } from '@/lib/userData';
 import { WalletEditCard } from '@/components/WalletEditCard';
-import { Card } from '@/components/Card';
+import { Card } from '@/components/ui/card';
 import { ShoppingBag, Gamepad2, Plane } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
