@@ -1,125 +1,182 @@
 'use client';
+
 import { useState } from 'react';
 import { useModalStore } from '@/store/useModalStore';
-import { CreditCard, Tag, ChevronDown } from 'lucide-react';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useTransactionStore } from '@/store/useTransactionStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
+import { getUserWallets } from '@/lib/userData';
+import { getUserCategories } from '@/lib/userData';
+import { translations } from '@/lib/translations';
+import { currencySymbols } from '@/lib/currencyUtils';
+import { X } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function AddTransactionModal() {
-  const [amount, setAmount] = useState('25,00');
-  const [comment, setComment] = useState('');
-
   const { closeModal } = useModalStore();
+  const { user } = useAuthStore();
+  const { addTransaction } = useTransactionStore();
+  const { language, currency } = useSettingsStore();
+  const t = translations[language];
 
-  const handleBackspace = () => setAmount(amount.slice(0, -1) || '0');
-  const handleClear = () => setAmount('0');
+  const [type, setType] = useState<'expense' | 'income'>('expense');
+  const [amount, setAmount] = useState('');
+  const [comment, setComment] = useState('');
+  const [selectedWallet, setSelectedWallet] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-  const handleNumberClick = (num: string) => {
-    if (amount === '0') setAmount(num);
-    else setAmount(amount + num);
+  const wallets = user ? getUserWallets(user.id) : [];
+  const categories = user ? getUserCategories(user.id) : [];
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!amount || !selectedWallet) return;
+    if (type === 'expense' && !selectedCategory) return;
+
+    addTransaction({
+      type,
+      amount: parseFloat(amount),
+      comment,
+      walletId: parseInt(selectedWallet),
+      categoryId: type === 'expense' ? selectedCategory : undefined,
+      userId: user!.id,
+    });
+
+    closeModal('add');
+    setAmount('');
+    setComment('');
+    setSelectedWallet('');
+    setSelectedCategory('');
   };
 
   return (
-    <div className="flex">
-      {/* Левая часть — форма */}
-      <div className="flex-1 p-8">
-        <h2 className="text-3xl font-bold text-[var(--secondary-text)] mb-6">Expenses</h2>
+    <div
+      className="w-[480px] rounded-3xl p-6 shadow-xl"
+      style={{
+        backgroundColor: 'var(--accent-bg)',
+        color: 'var(--foreground)',
+      }}
+    >
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">{t.addTransaction}</h2>
+        <button
+          onClick={() => closeModal('add')}
+          className="p-2 rounded-lg hover:bg-[var(--secondary-bg)] transition"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
 
-        <div className="bg-[var(--secondary-bg)] rounded-2xl p-6 mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-[var(--secondary-text)] text-2xl">€</span>
-            <span className="text-4xl font-bold text-[var(--foreground)]">{amount}</span>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Tabs
+          value={type}
+          onValueChange={(value) => setType(value as 'expense' | 'income')}
+          className="w-full"
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="expense">{t.expenses}</TabsTrigger>
+            <TabsTrigger value="income">{t.incomes}</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <div className="space-y-2">
+          <Label htmlFor="amount">{t.amount}</Label>
+          <div className="relative">
+            <span
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-semibold"
+              style={{ color: 'var(--secondary-text)' }}
+            >
+              {currencySymbols[currency]}
+            </span>
+            <Input
+              id="amount"
+              type="number"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="pl-10"
+              placeholder="0.00"
+            />
           </div>
         </div>
 
-        <input
-          type="text"
-          placeholder="Add a comment ..."
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          className="w-full bg-[var(--secondary-bg)] rounded-2xl px-6 py-4 mb-4 text-[var(--secondary-text)] placeholder-[var(--secondary-text)] focus:outline-none focus:ring-2 focus:ring-[var(--border)]"
-        />
+        {type === 'expense' && (
+          <div className="space-y-2">
+            <Label htmlFor="comment">{t.comment}</Label>
+            <Input
+              id="comment"
+              type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder={t.comment}
+            />
+          </div>
+        )}
 
-        <div className="flex gap-3">
-          <button className="flex items-center gap-2 bg-[var(--page-bg)] rounded-xl px-4 py-3 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--background2)]">
-            <CreditCard className="w-4 h-4" />
-            <span>Wallet</span>
-            <ChevronDown className="w-3 h-3 text-[var(--secondary-text)]" />
-          </button>
-          <button className="flex items-center gap-2 bg-[var(--page-bg)] rounded-xl px-4 py-3 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--background2)]">
-            <Tag className="w-4 h-4" />
-            <span>Category</span>
-            <ChevronDown className="w-3 h-3 text-[var(--secondary-text)]" />
-          </button>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>{t.selectWallet}</Label>
+            <Select value={selectedWallet} onValueChange={setSelectedWallet}>
+              <SelectTrigger>
+                <SelectValue placeholder={t.selectWallet} />
+              </SelectTrigger>
+              <SelectContent>
+                {wallets.map((wallet) => (
+                  <SelectItem key={wallet.id} value={wallet.id.toString()}>
+                    {wallet.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {type === 'expense' && (
+            <div className="space-y-2">
+              <Label>{t.selectCategory}</Label>
+              <Select
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t.selectCategory} />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
-      </div>
 
-      {/* Правая часть — Numpad */}
-      <div className="w-[340px] bg-[var(--background-darker)] p-6 flex flex-col">
-        <div className="grid grid-cols-4 gap-3 flex-1">
-          {['1', '2', '3'].map((n) => (
-            <button
-              key={n}
-              onClick={() => handleNumberClick(n)}
-              className="bg-[var(--background2)] hover:bg-[var(--page-bg)] rounded-2xl text-3xl font-bold text-[var(--foreground)] h-20"
-            >
-              {n}
-            </button>
-          ))}
-          <button
-            onClick={handleBackspace}
-            className="bg-[var(--foreground)] hover:bg-[var(--border)] rounded-2xl text-[var(--background)] text-3xl font-bold h-20 flex items-center justify-center"
-          >
-            ⌫
-          </button>
-
-          {['4', '5', '6'].map((n) => (
-            <button
-              key={n}
-              onClick={() => handleNumberClick(n)}
-              className="bg-[var(--background2)] hover:bg-[var(--page-bg)] rounded-2xl text-3xl font-bold text-[var(--foreground)] h-20"
-            >
-              {n}
-            </button>
-          ))}
-          <button
-            onClick={handleClear}
-            className="bg-[var(--foreground)] hover:bg-[var(--border)] rounded-2xl text-[var(--background)] text-3xl font-bold h-20 flex items-center justify-center"
-          >
-            C
-          </button>
-
-          {['7', '8', '9'].map((n) => (
-            <button
-              key={n}
-              onClick={() => handleNumberClick(n)}
-              className="bg-[var(--background2)] hover:bg-[var(--page-bg)] rounded-2xl text-3xl font-bold text-[var(--foreground)] h-20"
-            >
-              {n}
-            </button>
-          ))}
-          <button
+        <div className="flex gap-3 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="flex-1"
             onClick={() => closeModal('add')}
-            className="bg-[var(--foreground)] hover:bg-[var(--border)] rounded-2xl text-[var(--background)] text-3xl font-bold h-20 flex items-center justify-center"
           >
-            ✓
-          </button>
-
-          <button className="bg-[var(--foreground)] hover:bg-[var(--border)] rounded-2xl text-[var(--background)] text-3xl font-bold h-20 flex items-center justify-center">
-            +
-          </button>
-          <button
-            onClick={() => handleNumberClick('0')}
-            className="bg-[var(--background2)] hover:bg-[var(--page-bg)] rounded-2xl text-3xl font-bold text-[var(--foreground)] h-20"
-          >
-            0
-          </button>
-          <button
-            onClick={() => handleNumberClick(',')}
-            className="bg-[var(--background2)] hover:bg-[var(--page-bg)] rounded-2xl text-3xl font-bold text-[var(--foreground)] h-20"
-          >
-            ,
-          </button>
+            {t.cancel}
+          </Button>
+          <Button type="submit" className="flex-1">
+            {t.add}
+          </Button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

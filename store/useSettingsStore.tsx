@@ -1,10 +1,11 @@
 'use client';
+
 import { create } from 'zustand';
-import { persist} from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 type Language = 'ru' | 'en';
-type Currency = 'EUR' | 'KZT' | 'RUB';
+type Currency = 'KZT' | 'USD' | 'EUR';
 
 interface SettingsState {
   themeMode: ThemeMode;
@@ -19,14 +20,14 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       themeMode: 'system',
-      language: 'ru',
-      currency: 'KZT',
-      setThemeMode: (mode) => set({ themeMode: mode.toLowerCase() as ThemeMode }), // 👈 Добавь toLowerCase
+      language: 'en',
+      currency: 'USD',
+      setThemeMode: (mode) => set({ themeMode: mode }),
       setLanguage: (lang) => set({ language: lang }),
       setCurrency: (curr) => set({ currency: curr }),
     }),
     {
-      name: 'settings-storage',
+      name: 'void-settings-storage',
     }
   )
 );
