@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useModalStore } from '@/store/useModalStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useTransactionStore, Transaction } from '@/store/useTransactionStore';
@@ -43,6 +43,9 @@ export default function EditTransactionModal({
   const [selectedCategory, setSelectedCategory] = useState(
     transaction.categoryId || ''
   );
+  const [transactionDate, setTransactionDate] = useState<string>(
+    new Date(transaction.date).toISOString().slice(0, 16)
+  );
 
   const wallets = user ? getUserWallets(user.id) : [];
   const categories = user ? getUserCategories(user.id) : [];
@@ -59,6 +62,7 @@ export default function EditTransactionModal({
       comment,
       walletId: parseInt(selectedWallet),
       categoryId: type === 'expense' ? selectedCategory : undefined,
+      date: new Date(transactionDate).toISOString(),
     });
 
     closeModal('editTransaction');
@@ -122,6 +126,17 @@ export default function EditTransactionModal({
               placeholder="0.00"
             />
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="date">Date & Time</Label>
+          <Input
+            id="date"
+            type="datetime-local"
+            value={transactionDate}
+            onChange={(e) => setTransactionDate(e.target.value)}
+            className="w-full"
+          />
         </div>
 
         {type === 'expense' && (

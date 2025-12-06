@@ -34,6 +34,9 @@ export default function AddTransactionModal() {
   const [comment, setComment] = useState('');
   const [selectedWallet, setSelectedWallet] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [transactionDate, setTransactionDate] = useState<string>(
+    new Date().toISOString().slice(0, 16)
+  );
 
   const wallets = user ? getUserWallets(user.id) : [];
   const categories = user ? getUserCategories(user.id) : [];
@@ -50,6 +53,7 @@ export default function AddTransactionModal() {
       comment,
       walletId: parseInt(selectedWallet),
       categoryId: type === 'expense' ? selectedCategory : undefined,
+      date: new Date(transactionDate).toISOString(),
       userId: user!.id,
     });
 
@@ -58,6 +62,7 @@ export default function AddTransactionModal() {
     setComment('');
     setSelectedWallet('');
     setSelectedCategory('');
+    setTransactionDate(new Date().toISOString().slice(0, 16));
   };
 
   return (
@@ -109,6 +114,17 @@ export default function AddTransactionModal() {
               placeholder="0.00"
             />
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="date">Date & Time</Label>
+          <Input
+            id="date"
+            type="datetime-local"
+            value={transactionDate}
+            onChange={(e) => setTransactionDate(e.target.value)}
+            className="w-full"
+          />
         </div>
 
         {type === 'expense' && (
