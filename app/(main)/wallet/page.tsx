@@ -1,26 +1,28 @@
+// app/(main)/wallet/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
+import { useTransactionStore } from '@/store/useTransactionStore';
+import { useModalStore } from '@/store/useModalStore';
 import { getUserWallets, Wallet } from '@/lib/userData';
 import { WalletEditCard } from '@/components/WalletEditCard';
 import { Card } from '@/components/ui/card';
-import { ShoppingBag, Gamepad2, Plane } from 'lucide-react';
+import { formatCurrency } from '@/lib/currencyUtils';
+import { translations } from '@/lib/translations';
 import { useSearchParams } from 'next/navigation';
 
 export default function WalletPage() {
   const { user } = useAuthStore();
+  const { currency, language } = useSettingsStore();
+  const { getUserTransactions } = useTransactionStore();
+  const { openModal } = useModalStore();
+  const t = translations[language];
   const searchParams = useSearchParams();
   const openWalletId = searchParams.get('open');
 
   const [wallets, setWallets] = useState<Wallet[]>([]);
-  const currency = 'EUR';
-
-  const currencySymbols = {
-    EUR: '€',
-    KZT: '₸',
-    USD: '$',
-  };
 
   useEffect(() => {
     if (user?.id) {
@@ -36,32 +38,10 @@ export default function WalletPage() {
     }
   };
 
-  const recentTransactions = [
-    {
-      id: 1,
-      title: 'Shopping',
-      subtitle: 'Zara',
-      amount: -127.99,
-      date: 'Today, 21:07',
-      icon: ShoppingBag,
-    },
-    {
-      id: 2,
-      title: 'Entertainment',
-      subtitle: 'Steam',
-      amount: -5.4,
-      date: 'Yesterday, 23:59',
-      icon: Gamepad2,
-    },
-    {
-      id: 3,
-      title: 'Travel',
-      subtitle: 'Italy',
-      amount: -298.42,
-      date: 'Yesterday, 23:59',
-      icon: Plane,
-    },
-  ];
+  const transactions = user ? getUserTransactions(user.id) : [];
+  const recentTransactions = transactions
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
 
   if (!user) {
     return <div>Loading...</div>;
@@ -77,9 +57,6 @@ export default function WalletPage() {
               key={wallet.id}
               wallet={wallet}
               iconName={wallet.icon}
-              currencySymbol={
-                currencySymbols[currency as keyof typeof currencySymbols]
-              }
               isOpen={wallet.id.toString() === openWalletId}
               onUpdate={handleUpdate}
             />
@@ -87,63 +64,54 @@ export default function WalletPage() {
         </div>
 
         {/* Recent Transactions */}
-        <Card
-          className="rounded-3xl p-8 shadow-lg"
-          style={{
-            backgroundColor: 'var(--accent-bg)',
-            color: 'var(--foreground)',
-          }}
-        >
-          <h2 className="text-3xl font-bold mb-6">Recent Transactions</h2>
+        <Card className="rounded-3xl p-8 shadow-lg">
+          <h2 className="text-3xl font-bold mb-6">
+            {language === 'ru' ? 'Последние транзакции' : 'Recent Transactions'}
+          </h2>
 
           <div className="space-y-3">
             {recentTransactions.map((transaction) => (
               <Card
                 key={transaction.id}
-                className="rounded-2xl p-5 flex items-center justify-between hover:shadow-md transition-shadow"
-                style={{
-                  backgroundColor: 'var(--background-darker)',
-                  color: 'var(--foreground)',
-                }}
+                className="p-5 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => openModal('editTransaction', transaction)}
               >
                 <div className="flex items-center gap-4">
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                    style={{ backgroundColor: 'var(--accent-bg)' }}
-                  >
-                    <transaction.icon
-                      className="w-7 h-7"
-                      style={{ color: 'var(--foreground)' }}
-                    />
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-secondary">
+                    <span className="text-2xl">
+                      {transaction.type === 'income' ? '💰' : '💸'}
+                    </span>
                   </div>
                   <div>
                     <div className="font-semibold text-lg">
-                      {transaction.title}
+                      {transaction.comment || 'Transaction'}
                     </div>
-                    <div
-                      className="text-sm"
-                      style={{ color: 'var(--secondary-text)' }}
-                    >
-                      {transaction.subtitle}
+                    <div className="text-sm text-muted-foreground">
+                      {new Date(transaction.date).toLocaleDateString()}
                     </div>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <div className="font-bold text-lg">
-                    {transaction.amount < 0 ? '-' : '+'}
-                    {currencySymbols[currency as keyof typeof currencySymbols]}
-                    {Math.abs(transaction.amount).toFixed(2)}
-                  </div>
                   <div
-                    className="text-sm"
-                    style={{ color: 'var(--secondary-text)' }}
+                    className={`font-bold text-lg ${
+                      transaction.type === 'income'
+                        ? 'text-green-500'
+                        : 'text-red-500'
+                    }`}
                   >
-                    {transaction.date}
+                    {transaction.type === 'income' ? '+' : '-'}
+                    {formatCurrency(transaction.amount, currency)}
                   </div>
                 </div>
               </Card>
             ))}
+
+            {recentTransactions.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                {language === 'ru' ? 'Нет транзакций' : 'No transactions yet'}
+              </div>
+            )}
           </div>
         </Card>
       </div>

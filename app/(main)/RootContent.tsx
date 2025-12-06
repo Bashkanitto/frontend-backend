@@ -20,25 +20,35 @@ export default function RootContent({
     checkAuth();
   }, [checkAuth]);
 
-  const getThemeClass = () => {
-    if (!mounted) return 'colors';
+  useEffect(() => {
+    if (!mounted) return;
 
-    if (themeMode === 'light') return 'colors-light';
-    if (themeMode === 'dark') return 'colors-dark';
-    return 'colors';
-  };
+    const root = document.documentElement;
 
-  const themeClass = getThemeClass();
+    if (themeMode === 'system') {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+        .matches
+        ? 'dark'
+        : 'light';
+      root.classList.remove('light', 'dark');
+      root.classList.add(systemTheme);
+    } else {
+      root.classList.remove('light', 'dark');
+      root.classList.add(themeMode);
+    }
+  }, [themeMode, mounted]);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
-    <div
-      className={`${themeClass} flex w-full h-screen bg-[var(--background)]`}
-    >
+    <div className="flex w-full h-screen bg-background">
       <Sidebar />
       <div className="flex flex-col flex-1 h-full pt-5">
         <Header />
         <Modal />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-6 overflow-y-auto">{children}</main>
       </div>
     </div>
   );

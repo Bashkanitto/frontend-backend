@@ -32,7 +32,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-4">
       {categories.map((category) => (
         <CategoryEditForm
           key={category.id}

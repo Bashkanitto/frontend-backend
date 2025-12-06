@@ -1,4 +1,4 @@
-
+// lib/userData.ts
 export type Category = {
   id: string;
   name: string;
@@ -27,12 +27,14 @@ const defaultCategories: Omit<Category, 'userId' | 'id'>[] = [
 ];
 
 const defaultWallets: Omit<Wallet, 'userId' | 'id'>[] = [
-  { name: 'Wallet', amount: 3000, icon: 'Wallet' },
-  { name: 'Cash', amount: 6000, icon: 'Banknote' },
-  { name: 'Savings', amount: 1000, icon: 'Landmark' },
+  { name: 'Wallet', amount: 0, icon: 'Wallet' },
+  { name: 'Cash', amount: 0, icon: 'Banknote' },
+  { name: 'Savings', amount: 0, icon: 'Landmark' },
 ];
 
 export function getUserCategories(userId: string): Category[] {
+  if (typeof window === 'undefined') return [];
+  
   const allCategories = JSON.parse(localStorage.getItem(CATEGORIES_KEY) || '[]') as Category[];
   let userCategories = allCategories.filter(cat => cat.userId === userId);
 
@@ -87,6 +89,8 @@ export function deleteUserCategory(userId: string, id: string): void {
 }
 
 export function getUserWallets(userId: string): Wallet[] {
+  if (typeof window === 'undefined') return [];
+  
   const allWallets = JSON.parse(localStorage.getItem(WALLETS_KEY) || '[]') as Wallet[];
   let userWallets = allWallets.filter(wallet => wallet.userId === userId);
 
