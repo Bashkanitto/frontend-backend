@@ -19,7 +19,6 @@ interface SidebarState {
   setIsOpen: (value: boolean) => void;
 }
 
-// сохраняем состояние sidebar
 export const useSidebarState = create<SidebarState>()(
   persist(
     (set, get) => ({
@@ -32,12 +31,3 @@ export const useSidebarState = create<SidebarState>()(
     }
   )
 );
-
-// состояние без сохранения в localstore
-// export const useSidebarState = create<SidebarState>((set) => ({
-//     isOpen: false,
-//     toggleState: () =>
-//         set((state) => ({ isOpen: !state.isOpen })),
-//     setIsOpen: (value) =>
-//         set({ isOpen: value })
-// }))

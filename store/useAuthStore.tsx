@@ -12,7 +12,6 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
 
-  // Actions
   register: (
     username: string,
     email: string,

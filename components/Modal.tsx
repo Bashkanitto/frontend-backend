@@ -5,10 +5,11 @@ import { useEffect } from 'react';
 import AddWalletModal from './modals/AddWalletModal';
 import AddCategoryModal from './modals/AddCategoryModal';
 import AddTransactionModal from './modals/AddTransactionModal';
+import EditTransactionModal from './modals/EditTransactionModal';
 import AccountModal from './modals/AccountModal';
 
 export default function Modal() {
-  const { isOpen, closeAll } = useModalStore();
+  const { isOpen, closeAll, modalData } = useModalStore();
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -28,7 +29,8 @@ export default function Modal() {
     isOpen('add') ||
     isOpen('addCategory') ||
     isOpen('addWallet') ||
-    isOpen('profileMenu'); // Теперь только одна модалка для профиля
+    isOpen('profileMenu') ||
+    isOpen('editTransaction');
 
   if (!hasOpenModal) return null;
 
@@ -36,7 +38,9 @@ export default function Modal() {
     if (isOpen('add')) return <AddTransactionModal />;
     if (isOpen('addCategory')) return <AddCategoryModal />;
     if (isOpen('addWallet')) return <AddWalletModal />;
-    if (isOpen('profileMenu')) return <AccountModal />; // Новая единая модалка
+    if (isOpen('profileMenu')) return <AccountModal />;
+    if (isOpen('editTransaction') && modalData)
+      return <EditTransactionModal transaction={modalData} />;
     return null;
   };
 

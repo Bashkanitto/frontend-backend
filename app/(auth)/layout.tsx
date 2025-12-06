@@ -27,7 +27,6 @@ const inter = localFont({
   variable: '--font-inter',
 });
 
-// app/(auth)/layout.tsx
 export default function AuthLayout({
   children,
 }: {

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Transaction } from './useTransactionStore';
 
 type ModalName =
   | 'add'
@@ -7,13 +8,15 @@ type ModalName =
   | 'profile'
   | 'profileMenu'
   | 'settings'
-  | 'logout';
+  | 'logout'
+  | 'editTransaction';
 
 type ModalStore = {
-  openModal: (name: ModalName) => void;
+  openModal: (name: ModalName, data?: any) => void;
   closeModal: (name: ModalName) => void;
   isOpen: (name: ModalName) => boolean;
   modals: Record<ModalName, boolean>;
+  modalData: any;
   closeAll: () => void;
 };
 
@@ -26,13 +29,21 @@ export const useModalStore = create<ModalStore>((set, get) => ({
     profileMenu: false,
     settings: false,
     logout: false,
+    editTransaction: false,
   },
+  modalData: null,
 
-  openModal: (name) =>
-    set((state) => ({ modals: { ...state.modals, [name]: true } })),
+  openModal: (name, data) =>
+    set((state) => ({ 
+      modals: { ...state.modals, [name]: true },
+      modalData: data 
+    })),
 
   closeModal: (name) =>
-    set((state) => ({ modals: { ...state.modals, [name]: false } })),
+    set((state) => ({ 
+      modals: { ...state.modals, [name]: false },
+      modalData: null
+    })),
 
   isOpen: (name) => get().modals[name],
 
@@ -41,5 +52,6 @@ export const useModalStore = create<ModalStore>((set, get) => ({
       modals: Object.fromEntries(
         Object.keys(state.modals).map((key) => [key, false])
       ) as Record<ModalName, boolean>,
+      modalData: null,
     })),
 }));

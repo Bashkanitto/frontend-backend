@@ -36,14 +36,12 @@ export default function PageLoader() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // показываем лоадер при смене пути
     setLoading(true);
 
-    // имитация времени загрузки страницы (можно убрать или заменить)
     const timeout = setTimeout(() => setLoading(false), 300);
 
     return () => clearTimeout(timeout);
-  }, [pathname]); // срабатывает при каждом изменении пути
+  }, [pathname]);
 
   if (!loading) return null;
   return <Loader />;

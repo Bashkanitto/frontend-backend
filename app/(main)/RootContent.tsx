@@ -17,7 +17,7 @@ export default function RootContent({
 
   useEffect(() => {
     setMounted(true);
-    checkAuth(); // Проверяем авторизацию при загрузке
+    checkAuth();
   }, [checkAuth]);
 
   const getThemeClass = () => {
