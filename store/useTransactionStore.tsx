@@ -18,7 +18,7 @@ export interface Transaction {
 
 interface TransactionState {
   transactions: Transaction[];
-  addTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
+  addTransaction: (transaction: Omit<Transaction, 'id'> & { date?: string }) => void;
   updateTransaction: (id: string, transaction: Partial<Transaction>) => void;
   deleteTransaction: (id: string) => void;
   getUserTransactions: (userId: string) => Transaction[];
@@ -38,7 +38,7 @@ export const useTransactionStore = create<TransactionState>()(
         const newTransaction: Transaction = {
           ...transaction,
           id: `${transaction.userId}_tx_${Date.now()}`,
-          date: new Date().toISOString(),
+          date: transaction.date || new Date().toISOString(),
         };
         set((state) => ({
           transactions: [...state.transactions, newTransaction],

@@ -34,7 +34,7 @@ export default function StatisticsPage() {
 
   const filteredTransactions = useMemo(() => {
     const now = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
 
     switch (timePeriod) {
       case 'week':
